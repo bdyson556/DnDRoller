@@ -1,0 +1,11 @@
+{
+  "shortsword": {
+    "die": 6,
+    "proficiency": true
+  },
+  "shortbow": {
+    "die": 6,
+    "type": "ranged",
+    "proficiency": true
+  }
+}
