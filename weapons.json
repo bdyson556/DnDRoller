@@ -1,11 +1,33 @@
 {
   "shortsword": {
     "die": 6,
-    "proficiency": true
+    "type": "melee",
+    "ability":  "dexterity",
+    "properties": ["light", "finesse"],
+    "proficiency": true,
+    "damage type": "piercing",
+    "quantity": 2,
+    "weight": 2
   },
   "shortbow": {
     "die": 6,
     "type": "ranged",
-    "proficiency": true
+    "ability": "dexterity",
+    "properties": ["ammunition", "ranged", "two-handed"],
+    "range": "80/320",
+    "damage type": "piercing",
+    "proficiency": true,
+    "quantity": 1,
+    "weight": 2
+  },
+  "dagger": {
+    "die": 4,
+    "quantity": 1,
+    "type": "melee",
+    "ability": "dexterity",
+    "properties": ["finesse", "light", "thrown", "ranged"],
+    "range": "20/60",
+    "damage type": "piercing",
+    "weight": 1
   }
 }

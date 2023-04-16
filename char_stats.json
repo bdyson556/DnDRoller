@@ -1,8 +1,111 @@
 {
+  "level": 5,
+  "armor class": 18,
+  "dual-wield bonus": 1,
+  "num damage dice": 1,
+  "num sneak dice": 3,
+  "damage ability": "dexterity",
   "strength": 0,
+  "initiative": 5,
   "dexterity": 5,
   "constitution": 0,
   "intelligence": 3,
   "wisdom": 2,
-  "charisma": 2
+  "charisma": 2,
+  "proficiency bonus": 3,
+  "acrobatics": {
+    "ability": "dexterity",
+    "modifier": 11,
+    "proficient": true
+  },
+  "animal handling": {
+    "ability": "wisdom",
+    "modifier": 2,
+    "proficient": false
+  },
+  "arcana": {
+    "ability": "intelligence",
+    "modifier": 3,
+    "proficient": false
+  },
+  "athletics": {
+    "ability": "strength",
+    "modifier": 0,
+    "proficient": false
+  },
+  "deception": {
+    "ability": "charisma",
+    "modifier": 5,
+    "proficient": true
+  },
+  "history": {
+    "ability": "intelligence",
+    "modifier": 3,
+    "proficient": false
+  },
+  "insight": {
+    "ability": "wisdom",
+    "modifier": 5,
+    "proficient": false
+  },
+  "intimidation": {
+    "ability": "charisma",
+    "modifier": 2,
+    "proficient": false
+  },
+  "investigation": {
+    "ability": "intelligence",
+    "modifier": 6,
+    "proficient": true
+  },
+  "medicine": {
+    "ability": "wisdom",
+    "modifier": 2,
+    "proficient": false
+  },
+  "nature": {
+    "ability": "intelligence",
+    "modifier": 3,
+    "proficient": false
+  },
+  "perception": {
+    "ability": "wisdom",
+    "modifier": 5,
+    "proficient": true
+  },
+  "performance": {
+    "ability": "charisma",
+    "modifier": 2,
+    "proficient": false
+  },
+    "persuasion": {
+    "ability": "charisma",
+    "modifier": 5,
+    "proficient": true
+  },
+    "religion": {
+    "ability": "wisdom",
+    "modifier": 3,
+    "proficient": false
+  },
+    "sleight of hand": {
+    "ability": "dexterity",
+    "modifier": 11,
+    "proficient": true
+  },
+    "stealth": {
+    "ability": "dexterity",
+    "modifier": 11,
+    "proficient": true
+  },
+    "survival": {
+    "ability": "wisdom",
+    "modifier": 2,
+    "proficient": false
+  },
+  "thieve's tools": {
+    "ability": "dexterity",
+    "modifier": 11,
+    "proficient": true
+  }
 }
