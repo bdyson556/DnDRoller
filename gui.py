@@ -5,7 +5,8 @@ from tkinter import messagebox
 import roll
 import stats_and_mods
 from roll import roll_damage, roll_to_hit, roll_skill, roll_initiative
-from gui_helpers import autocheck_checkbox, autodisable_checkbox, depress_button, release_button
+from gui_helpers import toggle_active_disabled, autocheck_checkbox, depress_button, \
+    release_button
 
 # TODO: main menu: display stats, check (leads to menu or dropdown menu to select skill)
 # TODO: display stats
@@ -160,8 +161,6 @@ class Menu:
 
 
     def roll_for_damage_menu(self):
-        print("Roll for Damage button clicked")
-
         roll_for_damage_menu = tk.Toplevel(self.window)
         roll_for_damage_menu.title("Roll for damage")
         roll_for_damage_menu.geometry("550x300")
@@ -195,8 +194,8 @@ class Menu:
                                                   text="Disadvantage",
                                                   variable=disadvantage_var,
                                                   command=lambda: self.combined_functions(
-                                                      [lambda: autodisable_checkbox(disadvantage_var, advantage_checkbutton),
-                                                      lambda: autodisable_checkbox(disadvantage_var, sneak_checkbutton)]
+                                                      [lambda: toggle_active_disabled(disadvantage_var, [advantage_checkbutton, sneak_checkbutton])]
+                                                      # lambda: toggle_active_disabled(disadvantage_var, sneak_checkbutton)]
                                                   ))
         disadvantage_checkbutton.pack()
 
@@ -231,52 +230,54 @@ class Menu:
         weapon_dropdown = tk.OptionMenu(sneak_menu, weapon, *stats_and_mods.weapons_stats.keys())
         weapon_dropdown.pack()
 
-        # skill_dropdown = tk.OptionMenu(skill_check_menu, skill_var, self.SKILLS)
-
-
         # Are you disadvantaged? Yes / No
         disadvantage_var = tk.BooleanVar()
         disadvantage_label = tk.Label(sneak_menu, text="Are you disadvantaged?")
         disadvantage_label.pack(pady=10)
-        yes_button_1 = tk.Button(sneak_menu, text="Yes", command=lambda: self.combined_functions(
-            [lambda: depress_button(yes_button_1, [no_button_1]),
-            lambda: disadvantage_var.set(True),
-            lambda: autodisable_checkbox(disadvantage_var, yes_button_2),
-            lambda: autodisable_checkbox(disadvantage_var, no_button_2)]
+        yes_disadvantaged_button = tk.Button(sneak_menu, text="Yes", command=lambda: self.combined_functions(
+            # [lambda: depress_button(yes_disadvantaged_button[1], [no_disadvantaged_button]),
+            [lambda: disadvantage_var.set(True),
+            lambda: depress_button(empty, yes_disadvantaged_button),
+            lambda: release_button(empty, no_disadvantaged_button),
+            lambda: toggle_active_disabled(disadvantage_var, [yes_advantaged_button, no_advantaged_button])]
+            # lambda: autodisable_checkbox(disadvantage_var, no_advantaged_button)]
         ))
-        no_button_1 = tk.Button(sneak_menu, text="No", command=lambda: self.combined_functions(
-            [lambda: depress_button(no_button_1, [yes_button_1]),
-            lambda: disadvantage_var.set(False),
-            lambda: autodisable_checkbox(disadvantage_var, yes_button_2),
-            lambda: autodisable_checkbox(disadvantage_var, no_button_2)]
+
+        no_disadvantaged_button = tk.Button(sneak_menu, text="No", command=lambda: self.combined_functions(
+            [lambda: disadvantage_var.set(False),
+            lambda: depress_button(empty, no_disadvantaged_button),
+            release_button(empty, yes_disadvantaged_button),
+            lambda: toggle_active_disabled(disadvantage_var, [yes_advantaged_button, no_advantaged_button])]
+            # lambda: autodisable_checkbox(disadvantage_var, no_advantaged_button)]
         ))
-        yes_button_1.pack(side="left")
-        no_button_1.pack(side="left")
+        yes_disadvantaged_button.pack(side="left")
+        no_disadvantaged_button.pack(side="left")
 
         # Do you have advantage? Yes / No
         advantage_var = tk.BooleanVar()
         advantage_label = tk.Label(sneak_menu, text="Do you have advantage?")
         advantage_label.pack(pady=10)
-        yes_button_2 = tk.Button(sneak_menu, text="Yes", command=lambda: self.combined_functions([lambda: depress_button(yes_button_2, [no_button_2]), lambda: advantage_var.set(True)]))
-        no_button_2 = tk.Button(sneak_menu, text="No", command=lambda: self.combined_functions([lambda: depress_button(no_button_2, [yes_button_2]), lambda: advantage_var.set(False)]))
-        yes_button_2.pack(side="left")
-        no_button_2.pack(side="left")
+        yes_advantaged_button = tk.Button(sneak_menu, text="Yes", command=lambda: self.combined_functions([lambda: depress_button(yes_advantaged_button, [no_advantaged_button]), lambda: advantage_var.set(True)]))
+        no_advantaged_button = tk.Button(sneak_menu, text="No", command=lambda: self.combined_functions([lambda: depress_button(no_advantaged_button, [yes_advantaged_button]), lambda: advantage_var.set(False)]))
+        yes_advantaged_button.pack(side="left")
+        no_advantaged_button.pack(side="left")
 
         # Are you and another enemy of the target flanking the target? Yes / No
         flanking_var = tk.BooleanVar()
         flanking_label = tk.Label(sneak_menu, text="Are you and another enemy of the target flanking the target?")
         flanking_label.pack(pady=10)
-        yes_button_3 = tk.Button(sneak_menu, text="Yes", command=lambda: self.combined_functions(
-            [lambda: depress_button(yes_button_3, [no_button_3]), lambda: flanking_var.set(True)]))
-        no_button_3 = tk.Button(sneak_menu, text="No", command=lambda: self.combined_functions(
-            [lambda: depress_button(no_button_3, [yes_button_3]), lambda: flanking_var.set(False)]))
-        yes_button_3.pack(side="left")
-        no_button_3.pack(side="left")
+        yes_flanking_button = tk.Button(sneak_menu, text="Yes", command=lambda: self.combined_functions(
+            [lambda: depress_button(yes_flanking_button, [no_flanking_button]), lambda: flanking_var.set(True)]))
+        no_flanking_button = tk.Button(sneak_menu, text="No", command=lambda: self.combined_functions(
+            [lambda: depress_button(no_flanking_button, [yes_flanking_button]), lambda: flanking_var.set(False)]))
+        yes_flanking_button.pack(side="left")
+        no_flanking_button.pack(side="left")
 
         def display_sneak_result():
             print(roll.get_sneak_eligibility(weapon, advantage=advantage_var, disadvantage=disadvantage_var, flanking=flanking_var))
 
         evaluate_button = tk.Button(sneak_menu, text="Evaluate", command=display_sneak_result)
+        evaluate_button.pack()
 
 
     def character_stats_menu(self):
