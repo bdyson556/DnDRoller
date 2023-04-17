@@ -1,9 +1,11 @@
 import random
 import tkinter as tk
 from tkinter import messagebox
+
+import roll
 import stats_and_mods
 from roll import roll_damage, roll_to_hit, roll_skill, roll_initiative
-from gui_helpers import enable_disable_checkbox
+from gui_helpers import autocheck_checkbox, autodisable_checkbox, depress_button, release_button
 
 # TODO: main menu: display stats, check (leads to menu or dropdown menu to select skill)
 # TODO: display stats
@@ -39,8 +41,10 @@ class Menu:
         self.current_roll_result = None
         self.roll_history = []
 
+
     def main_menu(self):
         self.window.mainloop()
+
 
     def show_option1_menu(self):
         option1_menu = tk.Toplevel(self.window)
@@ -52,6 +56,7 @@ class Menu:
 
         no_button = tk.Button(option1_menu, text="No")
         no_button.pack(pady=10)
+
 
     def get_selected_skill(self, skill_var):
         selected_skill = skill_var.get()
@@ -70,9 +75,9 @@ class Menu:
         # skill_entry.pack()
         skill_var = tk.StringVar()
         skill_var.set("None")
-        skill_dropdown = tk.OptionMenu(skill_check_menu, skill_var, "Acrobatics (Dex)", "Animal Handling (Wis)", "Arcana (Int)", "Athletics (Str)", "Deception (Cha)", "History (Int)", "Insight (Wis)", "Intimidation (Cha)", "Investigation (Int)", "Medicine (Wis)", "Nature (Int)", "Perception (Wis)", "Performance (Cha)", "Persuasion (Cha)", "Religion (Int)", "Sleight of Hand (Dex)", "Stealth (Dex)", "Survival (Wis)")
+        skill_dropdown = tk.OptionMenu(skill_check_menu, skill_var, self.SKILLS)
         skill_dropdown.pack()
-        check_button = tk.Button(skill_check_menu, text = "Check Skill", command=self.get_selected_skill(skill_var))
+        # check_button = tk.Button(skill_check_menu, text = "Check Skill", command=self.get_selected_skill(skill_var))
 
         advantage_var = tk.BooleanVar()
         advantage_checkbutton = tk.Checkbutton(skill_check_menu, text="Advantage", variable=advantage_var)
@@ -107,9 +112,6 @@ class Menu:
         print(result)
         result_label = tk.Label(menu, text=self.current_roll_result)
         result_label.pack()
-
-    def combined_functions(self, func_list):
-        for f in func_list: f()
 
     def roll_initiative_menu(self):
         print("Roll Initiative button clicked")
@@ -166,21 +168,36 @@ class Menu:
 
         weapon_label = tk.Label(roll_for_damage_menu, text="Enter weapon used:")
         weapon_label.pack(pady=10)
-
-        weapon_entry = tk.Entry(roll_for_damage_menu)
-        weapon_entry.pack()
+        weapon = tk.StringVar(value="None")
+        weapon.set("None")
+        weapon_dropdown = tk.OptionMenu(roll_for_damage_menu, weapon, *stats_and_mods.weapons_stats.keys())
+        weapon_dropdown.pack()
 
         advantage_var = tk.BooleanVar()
         advantage_checkbutton = tk.Checkbutton(roll_for_damage_menu, text="Advantage", variable=advantage_var)
         advantage_checkbutton.pack(pady=10)
 
         sneak_var = tk.BooleanVar()
-        sneak_checkbutton = tk.Checkbutton(roll_for_damage_menu, text="Sneak", variable=sneak_var, command=lambda: enable_disable_checkbox(sneak_var, advantage_checkbutton))
-        # sneak_checkbutton.bind("<ButtonRelease-1>", lambda event: enable_checkbox(advantage_checkbutton))
+        sneak_checkbutton = tk.Checkbutton(roll_for_damage_menu,
+                                           text="Sneak",
+                                           variable=sneak_var,
+                                           command=lambda: autocheck_checkbox(sneak_var, advantage_checkbutton)
+                                           )
         sneak_checkbutton.pack()
 
+        # Can I sneak attack? Opens new menu to check conditions.
+        sneak_eligibility_label = tk.Label(roll_for_damage_menu, text="Can I sneak attack?", cursor="hand2", fg="blue")
+        sneak_eligibility_label.bind("<Button-1>", self.sneak_eligibility_menu)
+        sneak_eligibility_label.place(relx=0.9, rely=0.39, anchor="e", bordermode="outside")
+
         disadvantage_var = tk.BooleanVar()
-        disadvantage_checkbutton = tk.Checkbutton(roll_for_damage_menu, text="Disadvantage", variable=disadvantage_var)
+        disadvantage_checkbutton = tk.Checkbutton(roll_for_damage_menu,
+                                                  text="Disadvantage",
+                                                  variable=disadvantage_var,
+                                                  command=lambda: self.combined_functions(
+                                                      [lambda: autodisable_checkbox(disadvantage_var, advantage_checkbutton),
+                                                      lambda: autodisable_checkbox(disadvantage_var, sneak_checkbutton)]
+                                                  ))
         disadvantage_checkbutton.pack()
 
         try:
@@ -189,7 +206,7 @@ class Menu:
                                     command = lambda: self.display_roll_result(
                                         roll_for_damage_menu,
                                         lambda: roll_damage(
-                                            weapon_entry.get(),
+                                            weapon,
                                             advantage=advantage_var.get(),
                                             disadvantage=disadvantage_var.get(),
                                             sneak=sneak_var.get()
@@ -201,8 +218,73 @@ class Menu:
             messagebox.showerror("Error", "Please enter a valid skill name.")
 
 
+    # def sneak_eligibility_menu(self, weapon):
+    def sneak_eligibility_menu(self, empty):
+        sneak_menu = tk.Toplevel(self.window)
+        sneak_menu.title("Can I sneak attack?")
+        sneak_menu.geometry("550x300")
+
+        weapon_label = tk.Label(sneak_menu, text="Enter weapon used:")
+        weapon_label.pack(pady=10)
+        weapon = tk.StringVar(value="None")
+        weapon.set("None")
+        weapon_dropdown = tk.OptionMenu(sneak_menu, weapon, *stats_and_mods.weapons_stats.keys())
+        weapon_dropdown.pack()
+
+        # skill_dropdown = tk.OptionMenu(skill_check_menu, skill_var, self.SKILLS)
+
+
+        # Are you disadvantaged? Yes / No
+        disadvantage_var = tk.BooleanVar()
+        disadvantage_label = tk.Label(sneak_menu, text="Are you disadvantaged?")
+        disadvantage_label.pack(pady=10)
+        yes_button_1 = tk.Button(sneak_menu, text="Yes", command=lambda: self.combined_functions(
+            [lambda: depress_button(yes_button_1, [no_button_1]),
+            lambda: disadvantage_var.set(True),
+            lambda: autodisable_checkbox(disadvantage_var, yes_button_2),
+            lambda: autodisable_checkbox(disadvantage_var, no_button_2)]
+        ))
+        no_button_1 = tk.Button(sneak_menu, text="No", command=lambda: self.combined_functions(
+            [lambda: depress_button(no_button_1, [yes_button_1]),
+            lambda: disadvantage_var.set(False),
+            lambda: autodisable_checkbox(disadvantage_var, yes_button_2),
+            lambda: autodisable_checkbox(disadvantage_var, no_button_2)]
+        ))
+        yes_button_1.pack(side="left")
+        no_button_1.pack(side="left")
+
+        # Do you have advantage? Yes / No
+        advantage_var = tk.BooleanVar()
+        advantage_label = tk.Label(sneak_menu, text="Do you have advantage?")
+        advantage_label.pack(pady=10)
+        yes_button_2 = tk.Button(sneak_menu, text="Yes", command=lambda: self.combined_functions([lambda: depress_button(yes_button_2, [no_button_2]), lambda: advantage_var.set(True)]))
+        no_button_2 = tk.Button(sneak_menu, text="No", command=lambda: self.combined_functions([lambda: depress_button(no_button_2, [yes_button_2]), lambda: advantage_var.set(False)]))
+        yes_button_2.pack(side="left")
+        no_button_2.pack(side="left")
+
+        # Are you and another enemy of the target flanking the target? Yes / No
+        flanking_var = tk.BooleanVar()
+        flanking_label = tk.Label(sneak_menu, text="Are you and another enemy of the target flanking the target?")
+        flanking_label.pack(pady=10)
+        yes_button_3 = tk.Button(sneak_menu, text="Yes", command=lambda: self.combined_functions(
+            [lambda: depress_button(yes_button_3, [no_button_3]), lambda: flanking_var.set(True)]))
+        no_button_3 = tk.Button(sneak_menu, text="No", command=lambda: self.combined_functions(
+            [lambda: depress_button(no_button_3, [yes_button_3]), lambda: flanking_var.set(False)]))
+        yes_button_3.pack(side="left")
+        no_button_3.pack(side="left")
+
+        def display_sneak_result():
+            print(roll.get_sneak_eligibility(weapon, advantage=advantage_var, disadvantage=disadvantage_var, flanking=flanking_var))
+
+        evaluate_button = tk.Button(sneak_menu, text="Evaluate", command=display_sneak_result)
+
+
     def character_stats_menu(self):
         print("Update Character Stats button clicked")
+
+
+    def combined_functions(self, func_list):
+        for f in func_list: f()
 
 
 if __name__ == "__main__":

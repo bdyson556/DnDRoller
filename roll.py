@@ -60,6 +60,12 @@ def roll_damage(weapon, advantage=False, disadvantage=False, sneak=False, critic
             "ability modifier": f"{ability_mod} ({damage_ability})"
             }
 
+
+def get_sneak_eligibility(weapon, advantage=False, disadvantage=False, flanking=False):
+    finesse_or_ranged = stats_and_mods.weapons_stats[weapon]["type"] in ["finesse", "ranged"]
+    return (not disadvantage) and finesse_or_ranged and (advantage or flanking)
+
+
 # print(
 #     roll_damage("shortsword", advantage=True, sneak=True, critical=True)
 # )
