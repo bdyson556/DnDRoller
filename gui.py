@@ -5,7 +5,7 @@ from tkinter import messagebox
 import roll
 import stats_and_mods
 from roll import roll_damage, roll_to_hit, roll_skill, roll_initiative
-from gui_helpers import toggle_active_disabled, autocheck_checkbox, depress_button, \
+from gui_helpers import toggle_active_disabled, autocheck_checkboxes, depress_button, \
     release_button
 
 # TODO: main menu: display stats, check (leads to menu or dropdown menu to select skill)
@@ -173,14 +173,20 @@ class Menu:
         weapon_dropdown.pack()
 
         advantage_var = tk.BooleanVar()
-        advantage_checkbutton = tk.Checkbutton(roll_for_damage_menu, text="Advantage", variable=advantage_var)
+        advantage_checkbutton = tk.Checkbutton(roll_for_damage_menu,
+                                               text="Advantage",
+                                               variable=advantage_var,
+                                               command=lambda: toggle_active_disabled(advantage_var, [disadvantage_checkbutton])
+                                               )
         advantage_checkbutton.pack(pady=10)
 
         sneak_var = tk.BooleanVar()
         sneak_checkbutton = tk.Checkbutton(roll_for_damage_menu,
                                            text="Sneak",
                                            variable=sneak_var,
-                                           command=lambda: autocheck_checkbox(sneak_var, advantage_checkbutton)
+                                           command=lambda: self.combined_functions([lambda: autocheck_checkboxes(sneak_var, [advantage_checkbutton]),
+                                                                                    lambda: toggle_active_disabled(sneak_var, [disadvantage_checkbutton])
+                                                                                    ])
                                            )
         sneak_checkbutton.pack()
 
@@ -202,15 +208,15 @@ class Menu:
         try:
             roll_button = tk.Button(roll_for_damage_menu,
                                     text="Roll!",
-                                    command = lambda: self.display_roll_result(
+                                    command = lambda: self.combined_functions([lambda: self.display_roll_result(
                                         roll_for_damage_menu,
                                         lambda: roll_damage(
-                                            weapon,
+                                            weapon.get(),
                                             advantage=advantage_var.get(),
                                             disadvantage=disadvantage_var.get(),
                                             sneak=sneak_var.get()
                                             )
-                                    )
+                                    ), lambda: print(f"disadvantage_var: {disadvantage_var.get()}, advantage_var: {advantage_var.get()}, snear_var: {sneak_var.get()}")]) # TODO:   .............  /????
             )
             roll_button.pack(pady=20)
         except KeyError as e: # TODO test this out

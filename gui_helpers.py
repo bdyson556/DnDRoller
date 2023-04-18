@@ -1,14 +1,15 @@
 import tkinter as tk
 
-def autocheck_checkbox(actor_checkbox_state, object_checkbox):
-    if actor_checkbox_state.get():
-        object_checkbox.configure(state="disabled", fg="gray")
-        if isinstance(object_checkbox, tk.Checkbutton):
-            object_checkbox.select()
-    else:
-        object_checkbox.configure(state="normal", fg="black")
-        if isinstance(object_checkbox, tk.Checkbutton):
-            object_checkbox.deselect()
+def autocheck_checkboxes(actor_checkbox_state, object_checkboxes):
+    for obj in object_checkboxes:
+        if actor_checkbox_state.get():
+            obj.configure(state="disabled", fg="gray")
+            if isinstance(obj, tk.Checkbutton):
+                obj.select()
+        else:
+            obj.configure(state="normal", fg="black")
+            if isinstance(obj, tk.Checkbutton):
+                obj.deselect()
 
 def toggle_active_disabled(actor_button_state, object_buttons):
     if actor_button_state.get() == True:
