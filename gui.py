@@ -74,7 +74,14 @@ class Menu:
         skill_box_label.pack(pady=10)
         skill_var = tk.StringVar()
         skill_var.set("None")
-        skill_dropdown = tk.OptionMenu(skill_check_menu, skill_var, *self.SKILLS)
+        dropdown_var = tk.StringVar(value='')
+        skill_dropdown = tk.OptionMenu(
+            skill_check_menu,
+            skill_var,
+            *self.SKILLS,
+            command=toggle_active_disabled(dropdown_var, [])
+        )
+
         skill_dropdown.pack()
 
         advantage_var = tk.BooleanVar()
@@ -112,7 +119,6 @@ class Menu:
                 command = lambda: self.display_roll_result(
                     skill_check_menu, lambda: roll_skill(
                         20,
-                        # skill_var.get().split(" ")[0].lower(),
                         skill_var.get().lower(),
                         advantage=advantage_var.get(),
                         disadvantage=disadvantage_var.get(),
