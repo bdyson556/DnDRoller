@@ -11,7 +11,7 @@ def autocheck_checkboxes(actor_checkbox_state, object_checkboxes):
             if isinstance(obj, tk.Checkbutton):
                 obj.deselect()
 
-def toggle_active_disabled(actor_button_state, object_buttons):
+def toggle_active_disabled(actor_button_state, object_buttons: list):
     if actor_button_state.get() == True:
         for obj in object_buttons:
             obj.configure(state="disabled", fg="gray")

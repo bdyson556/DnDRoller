@@ -15,7 +15,7 @@ import tkinter as tk
 
 class Menu:
 
-    SKILLS = ["Acrobatics (Dex)", "Animal Handling (Wis)", "Arcana (Int)", "Athletics (Str)", "Deception (Cha)", "History (Int)", "Insight (Wis)", "Intimidation (Cha)", "Investigation (Int)", "Medicine (Wis)", "Nature (Int)", "Perception (Wis)", "Performance (Cha)", "Persuasion (Cha)", "Religion (Int)", "Sleight of Hand (Dex)", "Stealth (Dex)", "Survival (Wis)"]
+    SKILLS = ["Acrobatics (Dex)", "Animal Handling (Wis)", "Arcana (Int)", "Athletics (Str)", "Deception (Cha)", "History (Int)", "Insight (Wis)", "Intimidation (Cha)", "Investigation (Int)", "Medicine (Wis)", "Nature (Int)", "Perception (Wis)", "Performance (Cha)", "Persuasion (Cha)", "Religion (Int)", "Sleight of Hand (Dex)", "Stealth (Dex)", "Survival (Wis)", "Thieves' Tools (Dex)"]
 
     def __init__(self):
         self.window = tk.Tk()
@@ -72,20 +72,31 @@ class Menu:
 
         skill_box_label = tk.Label(skill_check_menu, text="Enter skill to check:")
         skill_box_label.pack(pady=10)
-        # skill_entry = tk.Entry(skill_check_menu)
-        # skill_entry.pack()
         skill_var = tk.StringVar()
         skill_var.set("None")
-        skill_dropdown = tk.OptionMenu(skill_check_menu, skill_var, self.SKILLS)
+        skill_dropdown = tk.OptionMenu(skill_check_menu, skill_var, *self.SKILLS)
         skill_dropdown.pack()
-        # check_button = tk.Button(skill_check_menu, text = "Check Skill", command=self.get_selected_skill(skill_var))
 
         advantage_var = tk.BooleanVar()
-        advantage_checkbutton = tk.Checkbutton(skill_check_menu, text="Advantage", variable=advantage_var)
+        advantage_checkbutton = tk.Checkbutton(
+            skill_check_menu,
+            text="Advantage",
+            variable=advantage_var,
+            command=lambda: toggle_active_disabled(
+                advantage_var,
+                [disadvantage_checkbutton]
+            )
+        )
         advantage_checkbutton.pack(pady=10)
 
         disadvantage_var = tk.BooleanVar()
-        disadvantage_checkbutton = tk.Checkbutton(skill_check_menu, text="Disadvantage", variable=disadvantage_var)
+        disadvantage_checkbutton = tk.Checkbutton(
+            skill_check_menu,
+            text="Disadvantage",
+            variable=disadvantage_var,
+            command=lambda: toggle_active_disabled(
+            disadvantage_var, [advantage_checkbutton])
+        )
         disadvantage_checkbutton.pack()
 
         guidance_var = tk.BooleanVar()
@@ -95,13 +106,20 @@ class Menu:
         # TODO add num select widget to add custom modifier
 
         try:
-            roll_button = tk.Button(skill_check_menu,
-                                    text="Roll!",
-                                    command = lambda: self.display_roll_result(skill_check_menu, lambda: roll_skill(20, skill_var.get().split(" ")[0].lower(), advantage=advantage_var.get(),
-                                                       disadvantage=disadvantage_var.get(),
-                                                       guidance=guidance_var.get()
-                                                       ))
-                                    )
+            roll_button = tk.Button(
+                skill_check_menu,
+                text="Roll!",
+                command = lambda: self.display_roll_result(
+                    skill_check_menu, lambda: roll_skill(
+                        20,
+                        # skill_var.get().split(" ")[0].lower(),
+                        skill_var.get().lower(),
+                        advantage=advantage_var.get(),
+                        disadvantage=disadvantage_var.get(),
+                        guidance=guidance_var.get()
+                    )
+                )
+            )
             roll_button.pack(pady=20)
         except KeyError as e: # TODO test this out
             messagebox.showerror("Error", "Please enter a valid skill name.")
@@ -136,29 +154,45 @@ class Menu:
 
         weapon_label = tk.Label(roll_to_hit_menu, text="Enter weapon used:")
         weapon_label.pack(pady=10)
-
-        weapon_entry = tk.Entry(roll_to_hit_menu)
-        weapon_entry.pack()
+        weapon = tk.StringVar(value="None")
+        weapon.set("None")
+        weapon_dropdown = tk.OptionMenu(roll_to_hit_menu, weapon, *stats_and_mods.weapons_stats.keys())
+        weapon_dropdown.pack()
 
         advantage_var = tk.BooleanVar()
-        advantage_checkbutton = tk.Checkbutton(roll_to_hit_menu, text="Advantage", variable=advantage_var)
+        advantage_checkbutton = tk.Checkbutton(
+            roll_to_hit_menu,
+            text="Advantage",
+            variable=advantage_var,
+            command=lambda: toggle_active_disabled(advantage_var, [disadvantage_checkbutton])
+        )
         advantage_checkbutton.pack(pady=10)
 
         disadvantage_var = tk.BooleanVar()
-        disadvantage_checkbutton = tk.Checkbutton(roll_to_hit_menu, text="Disadvantage", variable=disadvantage_var)
-        disadvantage_checkbutton.pack()
+        disadvantage_checkbutton = tk.Checkbutton(
+            roll_to_hit_menu,
+            text="Disadvantage",
+            variable=disadvantage_var,
+            command=lambda: toggle_active_disabled(disadvantage_var, [advantage_checkbutton])
+        )
+        disadvantage_checkbutton.pack(pady=10)
 
         try:
-            roll_button = tk.Button(roll_to_hit_menu,
-                                    text="Roll!",
-                                    command = lambda: self.display_roll_result(roll_to_hit_menu, lambda: roll_to_hit(weapon_entry.get(), advantage=advantage_var.get(),
-                                                       disadvantage=disadvantage_var.get()
-                                                       ))
-                                    )
+            roll_button = tk.Button(
+                roll_to_hit_menu,
+                text="Roll!",
+                command = lambda: self.display_roll_result(
+                    roll_to_hit_menu,
+                    lambda: roll_to_hit(
+                        weapon.get(),
+                        advantage=advantage_var.get(),
+                        disadvantage=disadvantage_var.get()
+                    )
+                )
+            )
             roll_button.pack(pady=20)
         except KeyError as e: # TODO test this out
             messagebox.showerror("Error", "Please enter a valid skill name.")
-
 
     def roll_for_damage_menu(self):
         roll_for_damage_menu = tk.Toplevel(self.window)
@@ -173,21 +207,33 @@ class Menu:
         weapon_dropdown.pack()
 
         advantage_var = tk.BooleanVar()
-        advantage_checkbutton = tk.Checkbutton(roll_for_damage_menu,
-                                               text="Advantage",
-                                               variable=advantage_var,
-                                               command=lambda: toggle_active_disabled(advantage_var, [disadvantage_checkbutton])
-                                               )
+        advantage_checkbutton = tk.Checkbutton(
+            roll_for_damage_menu,
+            text="Advantage",
+            variable=advantage_var,
+            command=lambda: toggle_active_disabled(
+                advantage_var,
+                [disadvantage_checkbutton]
+            )
+        )
         advantage_checkbutton.pack(pady=10)
 
         sneak_var = tk.BooleanVar()
-        sneak_checkbutton = tk.Checkbutton(roll_for_damage_menu,
-                                           text="Sneak",
-                                           variable=sneak_var,
-                                           command=lambda: self.combined_functions([lambda: autocheck_checkboxes(sneak_var, [advantage_checkbutton]),
-                                                                                    lambda: toggle_active_disabled(sneak_var, [disadvantage_checkbutton])
-                                                                                    ])
-                                           )
+        sneak_checkbutton = tk.Checkbutton(
+            roll_for_damage_menu,
+            text="Sneak",
+            variable=sneak_var,
+            command=lambda: self.combined_functions([
+                lambda: autocheck_checkboxes(
+                    sneak_var,
+                    [advantage_checkbutton]
+                ),
+                lambda: toggle_active_disabled(
+                    sneak_var,
+                    [disadvantage_checkbutton]
+                )
+            ])
+        )
         sneak_checkbutton.pack()
 
         # Can I sneak attack? Opens new menu to check conditions.
@@ -288,6 +334,20 @@ class Menu:
 
     def character_stats_menu(self):
         print("Update Character Stats button clicked")
+
+
+    def show_roll_history(self):
+        print("Roll history button clicked")
+        # roll_initiative_menu = tk.Toplevel(self.window)
+        # roll_initiative_menu.title("Skill Check")
+        # roll_initiative_menu.geometry("550x300")
+        #
+        # roll_button = tk.Button(
+        #     roll_initiative_menu,
+        #     text="Roll!",
+        #     command=lambda: self.display_roll_result(roll_initiative_menu, lambda: roll_initiative(advantage=False))
+        # )
+        # roll_button.pack(pady=20)
 
 
     def combined_functions(self, func_list):

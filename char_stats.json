@@ -13,97 +13,97 @@
   "wisdom": 2,
   "charisma": 2,
   "proficiency bonus": 3,
-  "acrobatics": {
+  "acrobatics (dex)": {
     "ability": "dexterity",
     "modifier": 11,
     "proficient": true
   },
-  "animal handling": {
+  "animal handling (wis)": {
     "ability": "wisdom",
     "modifier": 2,
     "proficient": false
   },
-  "arcana": {
+  "arcana (int)": {
     "ability": "intelligence",
     "modifier": 3,
     "proficient": false
   },
-  "athletics": {
+  "athletics (str)": {
     "ability": "strength",
     "modifier": 0,
     "proficient": false
   },
-  "deception": {
+  "deception (cha)": {
     "ability": "charisma",
     "modifier": 5,
     "proficient": true
   },
-  "history": {
+  "history (int)": {
     "ability": "intelligence",
     "modifier": 3,
     "proficient": false
   },
-  "insight": {
+  "insight (wid)": {
     "ability": "wisdom",
     "modifier": 5,
     "proficient": false
   },
-  "intimidation": {
+  "intimidation (cha)": {
     "ability": "charisma",
     "modifier": 2,
     "proficient": false
   },
-  "investigation": {
+  "investigation (int)": {
     "ability": "intelligence",
     "modifier": 6,
     "proficient": true
   },
-  "medicine": {
+  "medicine (wis)": {
     "ability": "wisdom",
     "modifier": 2,
     "proficient": false
   },
-  "nature": {
+  "nature (int)": {
     "ability": "intelligence",
     "modifier": 3,
     "proficient": false
   },
-  "perception": {
+  "perception (wis)": {
     "ability": "wisdom",
     "modifier": 5,
     "proficient": true
   },
-  "performance": {
+  "performance (cha)": {
     "ability": "charisma",
     "modifier": 2,
     "proficient": false
   },
-    "persuasion": {
+    "persuasion (cha)": {
     "ability": "charisma",
     "modifier": 5,
     "proficient": true
   },
-    "religion": {
+    "religion (int)": {
     "ability": "wisdom",
     "modifier": 3,
     "proficient": false
   },
-    "sleight of hand": {
+    "sleight of hand (dex)": {
     "ability": "dexterity",
     "modifier": 11,
     "proficient": true
   },
-    "stealth": {
+    "stealth (dex)": {
     "ability": "dexterity",
     "modifier": 11,
     "proficient": true
   },
-    "survival": {
+    "survival (wis)": {
     "ability": "wisdom",
     "modifier": 2,
     "proficient": false
   },
-  "thieve's tools": {
+  "thieves' tools (dex)": {
     "ability": "dexterity",
     "modifier": 11,
     "proficient": true
