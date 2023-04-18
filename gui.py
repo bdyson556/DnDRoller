@@ -4,7 +4,7 @@ from tkinter import messagebox
 
 import roll
 import stats_and_mods
-from roll import roll_damage, roll_to_hit, roll_skill, roll_initiative
+from roll import roll_damage, roll_to_hit, roll_initiative
 from gui_helpers import toggle_active_disabled, autocheck_checkboxes, depress_button, \
     release_button
 
@@ -15,7 +15,6 @@ import tkinter as tk
 
 class Menu:
 
-    SKILLS = ["Acrobatics (Dex)", "Animal Handling (Wis)", "Arcana (Int)", "Athletics (Str)", "Deception (Cha)", "History (Int)", "Insight (Wis)", "Intimidation (Cha)", "Investigation (Int)", "Medicine (Wis)", "Nature (Int)", "Perception (Wis)", "Performance (Cha)", "Persuasion (Cha)", "Religion (Int)", "Sleight of Hand (Dex)", "Stealth (Dex)", "Survival (Wis)", "Thieves' Tools (Dex)"]
 
     def __init__(self):
         self.window = tk.Tk()
@@ -42,21 +41,20 @@ class Menu:
         self.current_roll_result = None
         self.roll_history = []
 
-
     def main_menu(self):
         self.window.mainloop()
-
-
-    def show_option1_menu(self):
-        option1_menu = tk.Toplevel(self.window)
-        option1_menu.title("Option 1 Menu")
-        option1_menu.geometry("200x100")
-
-        yes_button = tk.Button(option1_menu, text="Yes")
-        yes_button.pack(pady=10)
-
-        no_button = tk.Button(option1_menu, text="No")
-        no_button.pack(pady=10)
+    #
+    #
+    # def show_option1_menu(self):
+    #     option1_menu = tk.Toplevel(self.window)
+    #     option1_menu.title("Option 1 Menu")
+    #     option1_menu.geometry("200x100")
+    #
+    #     yes_button = tk.Button(option1_menu, text="Yes")
+    #     yes_button.pack(pady=10)
+    #
+    #     no_button = tk.Button(option1_menu, text="No")
+    #     no_button.pack(pady=10)
 
 
     def get_selected_skill(self, skill_var):
@@ -64,71 +62,7 @@ class Menu:
         print(selected_skill)
 
 
-    def skill_check_menu(self):
-        print("Skill Check button clicked")
-        skill_check_menu = tk.Toplevel(self.window)
-        skill_check_menu.title("Skill Check")
-        skill_check_menu.geometry("550x300")
 
-        skill_box_label = tk.Label(skill_check_menu, text="Enter skill to check:")
-        skill_box_label.pack(pady=10)
-        skill_var = tk.StringVar()
-        skill_var.set("None")
-        dropdown_var = tk.StringVar(value='')
-        skill_dropdown = tk.OptionMenu(
-            skill_check_menu,
-            skill_var,
-            *self.SKILLS,
-            command=toggle_active_disabled(dropdown_var, [])
-        )
-
-        skill_dropdown.pack()
-
-        advantage_var = tk.BooleanVar()
-        advantage_checkbutton = tk.Checkbutton(
-            skill_check_menu,
-            text="Advantage",
-            variable=advantage_var,
-            command=lambda: toggle_active_disabled(
-                advantage_var,
-                [disadvantage_checkbutton]
-            )
-        )
-        advantage_checkbutton.pack(pady=10)
-
-        disadvantage_var = tk.BooleanVar()
-        disadvantage_checkbutton = tk.Checkbutton(
-            skill_check_menu,
-            text="Disadvantage",
-            variable=disadvantage_var,
-            command=lambda: toggle_active_disabled(
-            disadvantage_var, [advantage_checkbutton])
-        )
-        disadvantage_checkbutton.pack()
-
-        guidance_var = tk.BooleanVar()
-        guidance_checkbutton = tk.Checkbutton(skill_check_menu, text="Guidance", variable=guidance_var)
-        guidance_checkbutton.pack()
-
-        # TODO add num select widget to add custom modifier
-
-        try:
-            roll_button = tk.Button(
-                skill_check_menu,
-                text="Roll!",
-                command = lambda: self.display_roll_result(
-                    skill_check_menu, lambda: roll_skill(
-                        20,
-                        skill_var.get().lower(),
-                        advantage=advantage_var.get(),
-                        disadvantage=disadvantage_var.get(),
-                        guidance=guidance_var.get()
-                    )
-                )
-            )
-            roll_button.pack(pady=20)
-        except KeyError as e: # TODO test this out
-            messagebox.showerror("Error", "Please enter a valid skill name.")
 
     def display_roll_result(self, menu, func):
         result = func()
