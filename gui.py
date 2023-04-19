@@ -1,5 +1,3 @@
-import random
-import tkinter as tk
 from tkinter import messagebox
 
 import roll
@@ -7,6 +5,7 @@ import stats_and_mods
 from roll import roll_damage, roll_to_hit, roll_initiative
 from gui_helpers import toggle_active_disabled, autocheck_checkboxes, depress_button, \
     release_button
+import skill_check
 
 # TODO: main menu: display stats, check (leads to menu or dropdown menu to select skill)
 # TODO: display stats
@@ -15,14 +14,22 @@ import tkinter as tk
 
 class Menu:
 
-
     def __init__(self):
+
         self.window = tk.Tk()
         self.window.title("Main Menu")
         self.window.geometry("450x350")
 
-        self.skill_check_button = tk.Button(self.window, text="Skill Check", command=self.skill_check_menu)
-        # self.skill_check_button = tk.Button(self.window, text="Skill Check", command=self.show_option1_menu)
+        self.skill_check_menu = skill_check.Skill_Check_Menu(self.window)
+        # self.roll_menu = roll.Roll_Menu()
+        # etc...
+
+        self.skill_check_button = tk.Button(
+            self.window,
+            text="Skill Check",
+            command=lambda: self.skill_check_menu.display()  # TODO: remove lambda if no params?
+        )
+
         self.skill_check_button.pack()
 
         self.roll_initiative_button = tk.Button(self.window, text="Roll Initiative", command=self.roll_initiative_menu)
@@ -56,13 +63,9 @@ class Menu:
     #     no_button = tk.Button(option1_menu, text="No")
     #     no_button.pack(pady=10)
 
-
     def get_selected_skill(self, skill_var):
         selected_skill = skill_var.get()
         print(selected_skill)
-
-
-
 
     def display_roll_result(self, menu, func):
         result = func()
@@ -294,6 +297,3 @@ class Menu:
         for f in func_list: f()
 
 
-if __name__ == "__main__":
-    menu = Menu()
-    menu.main_menu()
