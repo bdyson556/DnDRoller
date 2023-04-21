@@ -1,8 +1,11 @@
 import random
 import stats_and_mods
 
+class Roller:
+    def __init__(self):
+        self.roll_history = []
 
-def roll_skill(die_size, skill, advantage=False, guidance=False, disadvantage=False, misc_mod=0):
+def roll_skill(die_size, skill, advantage=False, disadvantage=False, guidance=False, misc_mod=0):
     num_rolls = 2 if advantage else 1
     rolls = []
     roll_min = 0 if die_size == 100 else 1
