@@ -64,7 +64,7 @@ class Menu:
         roll_button = tk.Button(
             roll_initiative_menu,
             text="Roll!",
-            command = lambda: display_roll_result(roll_initiative_menu, lambda: roll_initiative(advantage=False))
+            command = lambda: display_roll_result(roll_initiative_menu, lambda: roll_initiative(advantage=False), self.roller)
         )
         roll_button.pack(pady=20)
 
@@ -183,7 +183,8 @@ class Menu:
                                         advantage=advantage_var.get(),
                                         disadvantage=disadvantage_var.get(),
                                         sneak=sneak_var.get()
-                                        )
+                                        ),
+                                    self.roller
                                 ), lambda: print(f"disadvantage_var: {disadvantage_var.get()}, advantage_var: {advantage_var.get()}, snear_var: {sneak_var.get()}")]) # TODO:   .............  /????
         )
         roll_button.pack(pady=20)
