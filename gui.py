@@ -27,9 +27,8 @@ class Menu:
         self.skill_check_button = tk.Button(
             self.window,
             text="Skill Check",
-            command=lambda: self.skill_check_menu.display()  # TODO: remove lambda if no params?
+            command=lambda: self.skill_check_menu.display  # TODO: remove lambda if no params?
         )
-
         self.skill_check_button.pack()
 
         self.roll_initiative_button = tk.Button(self.window, text="Roll Initiative", command=self.roll_initiative_menu)

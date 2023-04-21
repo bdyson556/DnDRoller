@@ -32,25 +32,21 @@ class Skill_Check_Menu:
             self.menu,
             self.skill_var,
             *self.SKILLS,
-            command=toggle_active_disabled(self.dropdown_var, [self.roll_button])
+            command=lambda: toggle_active_disabled(self.dropdown_var, [self.roll_button])
         )
         self.advantage_var = tk.BooleanVar()
         self.advantage_checkbutton = tk.Checkbutton(
             self.menu,
             text="Advantage",
             variable=self.advantage_var,
-            command=lambda: toggle_active_disabled(
-                self.advantage_var,
-                [self.disadvantage_checkbutton]
-            )
+            command=lambda: toggle_active_disabled(self.advantage_var, [self.disadvantage_checkbutton])
         )
         self.disadvantage_var = tk.BooleanVar()
         self.disadvantage_checkbutton = tk.Checkbutton(
             self.menu,
             text="Disadvantage",
             variable=self.disadvantage_var,
-            command=lambda: toggle_active_disabled(
-                self.disadvantage_var, [self.advantage_checkbutton])
+            command=lambda: toggle_active_disabled(self.disadvantage_var, [self.advantage_checkbutton])
         )
         self.guidance_var = tk.BooleanVar()
         self.guidance_checkbutton = tk.Checkbutton(self.menu, text="Guidance", variable=self.guidance_var)
@@ -65,6 +61,3 @@ class Skill_Check_Menu:
         self.disadvantage_checkbutton.pack()
         self.guidance_checkbutton.pack()
         self.roll_button.pack(pady=20)
-
-
-        
