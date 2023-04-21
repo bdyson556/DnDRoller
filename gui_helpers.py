@@ -40,5 +40,11 @@ def release_button(self, button, other_buttons=None):
     #     for b in other_buttons:
     #         b.configure(bg="original_color")
 
-
+def display_roll_result(menu, func, roller_instance):
+    result = func()
+    current_roll_result = result
+    roller_instance.roll_history.append(result)
+    print(result)
+    result_label = tk.Label(menu, text=current_roll_result)
+    result_label.pack()
 
