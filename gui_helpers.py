@@ -1,4 +1,5 @@
 import tkinter as tk
+import json
 
 def autocheck_checkboxes(actor_checkbox_state, object_checkboxes):
     for obj in object_checkboxes:
@@ -40,11 +41,12 @@ def release_button(self, button, other_buttons=None):
     #     for b in other_buttons:
     #         b.configure(bg="original_color")
 
-def display_roll_result(menu, func, roller_instance):
+def display_roll_result(box, func, roller_instance):
     result = func()
-    current_roll_result = result
+    current_roll_result = json.dumps(result)
     roller_instance.roll_history.append(result)
     print(result)
-    result_label = tk.Label(menu, text=current_roll_result)
-    result_label.grid(column=2)
+    # result_label = tk.Label(box, text=current_roll_result)
+    box.insert(tk.END, current_roll_result + "\n\n")
+    # result_label.grid(column=2)
 
