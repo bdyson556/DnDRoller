@@ -46,5 +46,5 @@ def display_roll_result(menu, func, roller_instance):
     roller_instance.roll_history.append(result)
     print(result)
     result_label = tk.Label(menu, text=current_roll_result)
-    result_label.pack()
+    result_label.grid(column=2)
 

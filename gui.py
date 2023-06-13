@@ -66,7 +66,7 @@ class Menu:
             text="Roll!",
             command = lambda: display_roll_result(roll_initiative_menu, lambda: roll_initiative(advantage=False), self.roller)
         )
-        roll_button.pack(pady=20)
+        roll_button.grid(pady=20)   # changed from pack to grid
 
 
     def roll_to_hit_menu(self):
