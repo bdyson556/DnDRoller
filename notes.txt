@@ -1,5 +1,1 @@
-menus to rearrange:
-- skill check DONE
-- roll initiative
-- roll for damage
-- roll to hit
+Disadvantage effect:
