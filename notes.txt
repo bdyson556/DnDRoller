@@ -1,6 +1,1 @@
-THINGS THAT AFFECT ROLLS:
-"Conditions":
-- adv -> roll twice and take best (extra roll)
-- guidance -> + 1d4 (rolled value)
-Mods:
-- typical -> + mod (relatively static value)
+Disadvantage effect:

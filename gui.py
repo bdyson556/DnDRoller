@@ -59,14 +59,22 @@ class Menu:
         print("Roll Initiative button clicked")
         roll_initiative_menu = tk.Toplevel(self.window)
         roll_initiative_menu.title("Skill Check")
-        roll_initiative_menu.geometry("550x300")
+        roll_initiative_menu.geometry("300x200")
 
+        output_box = tk.Text(roll_initiative_menu, width=15, height=4)
         roll_button = tk.Button(
             roll_initiative_menu,
             text="Roll!",
-            command = lambda: display_roll_result(roll_initiative_menu, lambda: roll_initiative(advantage=False), self.roller)
+            command=lambda: display_roll_result(output_box, lambda: roll_initiative(advantage=False), self.roller)
         )
-        roll_button.grid(pady=20)   # changed from pack to grid
+
+        roll_button.grid(row=0, sticky="nsew", pady=10, padx=100)
+        output_box.grid(row=1, sticky="nsew", pady=20, padx=15)
+
+        roll_initiative_menu.grid_rowconfigure(0, weight=0)
+        roll_initiative_menu.grid_rowconfigure(1, weight=3)
+        roll_initiative_menu.grid_columnconfigure(0, weight=1)
+
 
 
     def roll_to_hit_menu(self):
@@ -76,11 +84,9 @@ class Menu:
         roll_to_hit_menu.geometry("550x300")
 
         weapon_label = tk.Label(roll_to_hit_menu, text="Enter weapon used:")
-        weapon_label.pack(pady=10)
         weapon = tk.StringVar(value="None")
         weapon.set("None")
         weapon_dropdown = tk.OptionMenu(roll_to_hit_menu, weapon, *stats_and_mods.weapons_stats.keys())
-        weapon_dropdown.pack()
 
         advantage_var = tk.BooleanVar()
         advantage_checkbutton = tk.Checkbutton(
@@ -89,7 +95,6 @@ class Menu:
             variable=advantage_var,
             command=lambda: toggle_active_disabled(advantage_var, [disadvantage_checkbutton])
         )
-        advantage_checkbutton.pack(pady=10)
 
         disadvantage_var = tk.BooleanVar()
         disadvantage_checkbutton = tk.Checkbutton(
@@ -98,14 +103,14 @@ class Menu:
             variable=disadvantage_var,
             command=lambda: toggle_active_disabled(disadvantage_var, [advantage_checkbutton])
         )
-        disadvantage_checkbutton.pack(pady=10)
 
+        output_box = tk.Text(roll_to_hit_menu, width=40, height=15)
         try:
             roll_button = tk.Button(
                 roll_to_hit_menu,
                 text="Roll!",
                 command = lambda: display_roll_result(
-                    roll_to_hit_menu,
+                    output_box,
                     lambda: roll_to_hit(
                         weapon.get(),
                         advantage=advantage_var.get(),
@@ -114,9 +119,15 @@ class Menu:
                     self.roller
                 )
             )
-            roll_button.pack(pady=20)
         except KeyError as e: # TODO test this out
             messagebox.showerror("Error", "Please enter a valid skill name.")
+
+        weapon_label.grid(row=0, pady=10)
+        weapon_dropdown.grid(row=1, column=0, padx=10, pady=15, sticky="w")
+        advantage_checkbutton.grid(row=2, column=0, pady=10, sticky="w")
+        disadvantage_checkbutton.grid(row=3, column=0, pady=10, sticky="w")
+        roll_button.grid(row=4, column=0, pady=20, sticky="w")
+        output_box.grid(row=0, rowspan=6, column=1)
 
     def roll_for_damage_menu(self):
         roll_for_damage_menu = tk.Toplevel(self.window)
@@ -124,11 +135,9 @@ class Menu:
         roll_for_damage_menu.geometry("550x300")
 
         weapon_label = tk.Label(roll_for_damage_menu, text="Enter weapon used:")
-        weapon_label.pack(pady=10)
         weapon = tk.StringVar(value="None")
         weapon.set("None")
         weapon_dropdown = tk.OptionMenu(roll_for_damage_menu, weapon, *stats_and_mods.weapons_stats.keys())
-        weapon_dropdown.pack()
 
         advantage_var = tk.BooleanVar()
         advantage_checkbutton = tk.Checkbutton(
@@ -140,7 +149,6 @@ class Menu:
                 [disadvantage_checkbutton]
             )
         )
-        advantage_checkbutton.pack(pady=10)
 
         sneak_var = tk.BooleanVar()
         sneak_checkbutton = tk.Checkbutton(
@@ -158,12 +166,6 @@ class Menu:
                 )
             ])
         )
-        sneak_checkbutton.pack()
-
-        # Can I sneak attack? Opens new menu to check conditions.
-        sneak_eligibility_label = tk.Label(roll_for_damage_menu, text="Can I sneak attack?", cursor="hand2", fg="blue")
-        sneak_eligibility_label.bind("<Button-1>", self.sneak_eligibility_menu)
-        sneak_eligibility_label.place(relx=0.9, rely=0.39, anchor="e", bordermode="outside")
 
         disadvantage_var = tk.BooleanVar()
         disadvantage_checkbutton = tk.Checkbutton(
@@ -172,12 +174,12 @@ class Menu:
             variable=disadvantage_var,
             command=lambda: toggle_active_disabled(disadvantage_var, [advantage_checkbutton, sneak_checkbutton])
         )
-        disadvantage_checkbutton.pack()
 
+        output_box = tk.Text(roll_for_damage_menu, width=40, height=15)
         roll_button = tk.Button(roll_for_damage_menu,
                                 text="Roll!",
                                 command = lambda: self.combined_functions([lambda: display_roll_result(
-                                    roll_for_damage_menu,
+                                    output_box,
                                     lambda: roll_damage(
                                         weapon.get(),
                                         advantage=advantage_var.get(),
@@ -187,7 +189,24 @@ class Menu:
                                     self.roller
                                 ), lambda: print(f"disadvantage_var: {disadvantage_var.get()}, advantage_var: {advantage_var.get()}, snear_var: {sneak_var.get()}")]) # TODO:   .............  /????
         )
-        roll_button.pack(pady=20)
+
+        weapon_dropdown.grid()
+        advantage_checkbutton.grid()
+        disadvantage_checkbutton.grid()
+        roll_button.grid()
+
+        weapon_label.grid(row=0, pady=10)
+        weapon_dropdown.grid(row=1, column=0, padx=15)
+        advantage_checkbutton.grid(row=2, column=0, padx=15, pady=10, sticky="w")
+        sneak_checkbutton.grid(row=3, column=0, padx=15, pady=10, sticky="w")
+        disadvantage_checkbutton.grid(row=4, column=0, padx=15, pady=10, sticky="w")
+        roll_button.grid(row=5, column=0)
+        output_box.grid(row=0, rowspan=6, column=1, padx=15)
+
+        # Can I sneak attack? Opens new menu to check conditions.
+        sneak_eligibility_label = tk.Label(roll_for_damage_menu, text="Can I sneak attack?", cursor="hand2", fg="blue")
+        sneak_eligibility_label.bind("<Button-1>", self.sneak_eligibility_menu)
+        sneak_eligibility_label.place(relx=0.22, rely=0.9, anchor="e", bordermode="outside")
 
 
     # def sneak_eligibility_menu(self, weapon):
