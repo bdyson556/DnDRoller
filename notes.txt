@@ -1,6 +1,5 @@
-THINGS THAT AFFECT ROLLS:
-"Conditions":
-- adv -> roll twice and take best (extra roll)
-- guidance -> + 1d4 (rolled value)
-Mods:
-- typical -> + mod (relatively static value)
+menus to rearrange:
+- skill check DONE
+- roll initiative
+- roll for damage
+- roll to hit

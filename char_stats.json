@@ -43,7 +43,7 @@
     "modifier": 3,
     "proficient": false
   },
-  "insight (wid)": {
+  "insight (wis)": {
     "ability": "wisdom",
     "modifier": 5,
     "proficient": false

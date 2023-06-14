@@ -18,12 +18,8 @@ def roll_to_hit_menu(self):
     roll_to_hit_menu.geometry("550x300")
 
     weapon_label = tk.Label(roll_to_hit_menu, text="Enter weapon used:")
-    weapon_label.pack(pady=10)
     weapon = tk.StringVar(value="None")
-    # self.weapon.set("None")
-    # weapon_dropdown = tk.OptionMenu(roll_to_hit_menu, self.weapon, *stats_and_mods.weapons_stats.keys())
     weapon_dropdown = tk.OptionMenu(roll_to_hit_menu, weapon, *stats_and_mods.weapons_stats.keys())
-    weapon_dropdown.pack()
 
     advantage_var = tk.BooleanVar()
     advantage_checkbutton = tk.Checkbutton(
@@ -32,7 +28,6 @@ def roll_to_hit_menu(self):
         variable=advantage_var,
         command=lambda: toggle_active_disabled(advantage_var, [disadvantage_checkbutton])
     )
-    advantage_checkbutton.pack(pady=10)
 
     disadvantage_var = tk.BooleanVar()
     disadvantage_checkbutton = tk.Checkbutton(
@@ -41,7 +36,8 @@ def roll_to_hit_menu(self):
         variable=disadvantage_var,
         command=lambda: toggle_active_disabled(disadvantage_var, [advantage_checkbutton])
     )
-    disadvantage_checkbutton.pack(pady=10)
+
+    output_box = tk.Text(roll_to_hit_menu, width=40, height=15)
 
     try:
         roll_button = tk.Button(
@@ -57,6 +53,12 @@ def roll_to_hit_menu(self):
                 self.roller
             )
         )
-        roll_button.pack(pady=20)
     except KeyError as e:  # TODO test this out
         messagebox.showerror("Error", "Please enter a valid skill name.")
+
+    weapon_label.grid(pady=10)
+    weapon_dropdown.grid(row=0, column=0, padx=10, pady=15, sticky="w")
+    advantage_checkbutton.grid(row=1, column=0, pady=10, sticky="w")
+    disadvantage_checkbutton.grid(row=2, column=0, pady=10, sticky="w")
+    roll_button.grid(row=3, column=0, pady=20, sticky="w")
+    output_box.grid(row=0, rowspan=6, column=1)
