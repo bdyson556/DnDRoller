@@ -59,14 +59,22 @@ class Menu:
         print("Roll Initiative button clicked")
         roll_initiative_menu = tk.Toplevel(self.window)
         roll_initiative_menu.title("Skill Check")
-        roll_initiative_menu.geometry("550x300")
+        roll_initiative_menu.geometry("300x150")
 
+        output_box = tk.Text(roll_initiative_menu, width=15, height=4)
         roll_button = tk.Button(
             roll_initiative_menu,
             text="Roll!",
-            command = lambda: display_roll_result(roll_initiative_menu, lambda: roll_initiative(advantage=False), self.roller)
+            command=lambda: display_roll_result(output_box, lambda: roll_initiative(advantage=False), self.roller)
         )
-        roll_button.grid(pady=20)   # changed from pack to grid
+
+        roll_initiative_menu.grid_columnconfigure(0, weight=1, uniform="group1")
+        roll_initiative_menu.grid_columnconfigure(1, weight=1, uniform="group1")
+        roll_initiative_menu.grid_rowconfigure(0, weight=1)
+        roll_initiative_menu.grid_rowconfigure(1, weight=1)
+
+        roll_button.grid(row=0, pady=20, sticky="nsew")
+        output_box.grid(row=1, padx=50, pady=15, sticky="nsew")
 
 
     def roll_to_hit_menu(self):
