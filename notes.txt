@@ -1,1 +1,9 @@
-Disadvantage effect:
+Ideas:
+- maybe just put everything in the same window, except things like "Can I sneak attack?" which can be quick pop-ups.
+- insight checks
+
+THINGS THAT AFFECT ROLLS:
+"Conditions":
+- adv -> roll twice and take best (extra roll)
+- guidance -> + 1d4 (rolled value)
+- disadv
