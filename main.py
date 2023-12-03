@@ -1,4 +1,4 @@
-from gui import Menu
+from main_menu import Menu
 
 if __name__ == "__main__":
     # from global_objects import Global_Objects

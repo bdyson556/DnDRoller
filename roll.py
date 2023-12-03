@@ -15,8 +15,10 @@ def roll_skill(die_size, skill, advantage=False, disadvantage=False, guidance=Fa
     modifier = stats_and_mods.char_stats[skill]["modifier"]
     guidance_roll = random.randint(1, 4) if guidance else 0
     result = max(rolls) + modifier + guidance_roll
+
     return {"skill": skill, "result": result, "rolls": rolls, "proficiency": proficiency, "modifier": modifier,
             "guidance": guidance_roll}
+
     # TODO test this function
 
 

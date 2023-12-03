@@ -14,52 +14,43 @@ class Skill_Check_Menu:
         self.advantage_var = tk.BooleanVar()
         self.disadvantage_var = tk.BooleanVar()
         self.guidance_var = tk.BooleanVar()
+        self.menu = None
         # TODO add num select widget to add custom modifier
 
-    def display(self, window, roller_instance):
+    def display(self, main_menu_instance):
         print("clicked!")
-        menu = tk.Toplevel(window)
-        window.title("Skill Check")
-        window.title("Skill Check")
-        menu.geometry("550x300")
-        skill_box_label = tk.Label(menu, text="Enter skill to check:")
+        self.menu = tk.Toplevel(main_menu_instance.window)
+        main_menu_instance.window.title("Skill Check")
+        main_menu_instance.window.title("Skill Check")
+        self.menu.geometry("550x300")
+        skill_box_label = tk.Label(self.menu, text="Enter skill to check:")
 
         skill_dropdown = tk.OptionMenu(
-            menu,
+            self.menu,
             self.skill_var,
             *self.SKILLS,
             # command=lambda: toggle_active_disabled(self.dropdown_var, [roll_button]) # TODO seems to trigger Skill_Check_Menu.display...
         )
         advantage_checkbutton = tk.Checkbutton(
-            menu,
+            self.menu,
             text="Advantage",
             variable=self.advantage_var,
             command=lambda: toggle_active_disabled(self.advantage_var, [disadvantage_checkbutton])
         )
         disadvantage_checkbutton = tk.Checkbutton(
-            menu,
+            self.menu,
             text="Disadvantage",
             variable=self.disadvantage_var,
             command=lambda: toggle_active_disabled(self.disadvantage_var, [advantage_checkbutton])
         )
 
-        output_box = tk.Text(menu, width=40, height=15)
+        output_box = tk.Text(self.menu, width=40, height=15)
 
-        guidance_checkbutton = tk.Checkbutton(menu, text="Guidance", variable=self.guidance_var)
+        guidance_checkbutton = tk.Checkbutton(self.menu, text="Guidance", variable=self.guidance_var)
         roll_button = tk.Button(
-            menu,
+            self.menu,
             text="Roll!",
-            command=lambda: display_roll_result(
-                output_box,
-                lambda: roll_skill(
-                    20,
-                    self.skill_var.get().lower(),
-                    advantage=self.advantage_var.get(),
-                    disadvantage=self.disadvantage_var.get(),
-                    guidance=self.guidance_var.get()
-                ),
-                roller_instance
-            )
+            command=lambda: self.roll(main_menu_instance)
         )
 
         skill_box_label.grid(row=0, column=0, padx=10, pady=15, sticky="w")
@@ -69,5 +60,22 @@ class Skill_Check_Menu:
         guidance_checkbutton.grid(row=4, column=0, padx=15, pady=5, sticky="w")
         roll_button.grid(row=5, column=0, padx=15, pady=20, sticky="w")
         output_box.grid(row=0, rowspan=6, column=1, padx=50)
+
+    def roll(self, main_menu_instance):
+        roll_result = roll_skill(
+            20,
+            self.skill_var.get().lower(),
+            advantage=self.advantage_var.get(),
+            disadvantage=self.disadvantage_var.get(),
+            guidance=self.guidance_var.get()
+        )
+        main_menu_instance.roller.roll_history.append(roll_result)
+        #     roller_instance.roll_history.append(roll_result)
+        display_roll_result(
+            self.skill_var.get(),
+            roll_result,
+            main_menu_instance.output_box
+        )
+        self.menu.destroy()
 
 
