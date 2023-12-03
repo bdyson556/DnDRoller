@@ -15,58 +15,11 @@ def roll_skill(die_size, skill, advantage=False, disadvantage=False, guidance=Fa
     modifier = stats_and_mods.char_stats[skill]["modifier"]
     guidance_roll = random.randint(1, 4) if guidance else 0
     result = max(rolls) + modifier + guidance_roll
+
     return {"skill": skill, "result": result, "rolls": rolls, "proficiency": proficiency, "modifier": modifier,
             "guidance": guidance_roll}
+
     # TODO test this function
-
-
-def roll_initiative(advantage=None):
-    num_rolls = 2 if advantage else 1
-    rolls = []
-    for i in range(0, num_rolls):
-        rolls.append(random.randint(1, 20))
-    dex_mod = stats_and_mods.char_stats["dexterity"]
-    result = max(rolls) + dex_mod
-    return {"result": result, "rolls": rolls, "dex modifier": dex_mod}
-
-def roll_to_hit(weapon, advantage=False, disadvantage=False):
-    num_rolls = 2 if advantage else 1
-    rolls = []
-    weapon_type = stats_and_mods.weapons_stats[weapon]["ability"]
-    modifier = stats_and_mods.char_stats[weapon_type]
-    for i in range(0, num_rolls):
-        rolls.append(random.randint(1, 20))
-    result = max(rolls) + modifier
-    return {"result": result, "rolls": rolls, f"{weapon_type} modifier": modifier}
-
-
-def roll_damage(weapon, advantage=False, disadvantage=False, sneak=False, critical=False):    # TODO use adv/disadv
-    die = stats_and_mods.weapons_stats[weapon]["die"]
-    attack_type = stats_and_mods.weapons_stats[weapon]["type"]
-    # ability_mod = stats_and_mods.weapons[weapon][""]
-    damage_ability = stats_and_mods.char_stats["damage ability"]
-    ability_mod = stats_and_mods.char_stats[damage_ability]
-    print(ability_mod)
-    advantage = sneak
-    num_rolls = 1 + stats_and_mods.char_stats["num sneak dice"]
-    critical_mod = die * num_rolls if critical else 0
-    rolls = []
-    for i in range(0, num_rolls):
-        rolls.append(random.randint(1, die))
-    result = sum(rolls) + ability_mod + critical_mod
-    return {"result": result,
-            "sneak": sneak,
-            "advantage": advantage,
-            "critical mod": f"{critical_mod} ({num_rolls} roll * d{die})",
-            "rolls": f"{rolls} (= {sum(rolls)})",
-            "attack type": attack_type,
-            "ability modifier": f"{ability_mod} ({damage_ability})"
-            }
-
-
-def get_sneak_eligibility(weapon, advantage=False, disadvantage=False, flanking=False):
-    finesse_or_ranged = stats_and_mods.weapons_stats[weapon]["type"] in ["finesse", "ranged"]
-    return (not disadvantage) and finesse_or_ranged and (advantage or flanking)
 
 
 # print(

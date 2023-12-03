@@ -1,5 +1,7 @@
 Ideas:
 - maybe just put everything in the same window, except things like "Can I sneak attack?" which can be quick pop-ups.
+    - ON SECOND THOUGHT, maybe still have a popup to fill out the information and submit the roll, but print in main window
+    - print with roll type and results laid out in a somewhat more readable format
 - insight checks
 
 THINGS THAT AFFECT ROLLS:

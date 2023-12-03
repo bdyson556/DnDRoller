@@ -1,6 +1,9 @@
 import tkinter as tk
 import json
 
+from roll import roll_skill
+
+
 def autocheck_checkboxes(actor_checkbox_state, object_checkboxes):
     for obj in object_checkboxes:
         if actor_checkbox_state.get():
@@ -41,12 +44,17 @@ def release_button(self, button, other_buttons=None):
     #     for b in other_buttons:
     #         b.configure(bg="original_color")
 
-def display_roll_result(box, func, roller_instance):
-    result = func()
-    current_roll_result = json.dumps(result)
-    roller_instance.roll_history.append(result)
-    print(result)
-    # result_label = tk.Label(box, text=current_roll_result)
-    box.insert(tk.END, current_roll_result + "\n\n")
-    # result_label.grid(column=2)
+def display_skill_roll_result(roll_type, roll_result, box):
+    print(roll_result)
+    text_output = roll_type + "\n" \
+                  + "\tRoll result: " + str(roll_result.get("result")) + "\t\t" + "rolls: " + str(roll_result.get("rolls")) + "\n" \
+                  + "\tAbility modifier: " + "+" + str(roll_result.get("modifier")) + "\n" \
+                  + "\tProficient: " + str(roll_result.get("proficiency")) + "\n" \
+                  + "\tGuidance: " + "+" + str(roll_result.get("guidance")) + "\n\n"
+    box.insert(tk.END, text_output)
+
+def display_roll_result_generic(roll_type, roll_result, box):
+    print(roll_result)
+    text_output = str(roll_type) + "\n\t" + json.dumps(roll_result) + "\n\n"
+    box.insert(tk.END, text_output)
 
