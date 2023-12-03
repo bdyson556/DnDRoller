@@ -21,16 +21,6 @@ def roll_skill(die_size, skill, advantage=False, disadvantage=False, guidance=Fa
 
     # TODO test this function
 
-
-def roll_initiative(advantage=None):
-    num_rolls = 2 if advantage else 1
-    rolls = []
-    for i in range(0, num_rolls):
-        rolls.append(random.randint(1, 20))
-    dex_mod = stats_and_mods.char_stats["dexterity"]
-    result = max(rolls) + dex_mod
-    return {"result": result, "rolls": rolls, "dex modifier": dex_mod}
-
 def roll_to_hit(weapon, advantage=False, disadvantage=False):
     num_rolls = 2 if advantage else 1
     rolls = []
