@@ -1,9 +1,8 @@
 import tkinter as tk
 import random
 
-import roll
 import stats_and_mods
-from display_helpers import toggle_active_disabled, display_skill_roll_result, display_roll_result_generic
+from display_helpers import toggle_active_disabled, display_roll_result_generic
 
 
 class Initiative_Menu:
@@ -14,23 +13,22 @@ class Initiative_Menu:
         self.advantage = None
 
     def display(self):
-        # roll_initiative_menu = tk.Toplevel(self.window)
         self.window.title("Roll initiative...")
-        self.window.title.geometry("300x200")
+        self.window.geometry("300x200")
 
         roll_button = tk.Button(
             self.window,
             text="Roll!",
-            command=lambda: self.roll_initiative(self.window, False) # TODO:
+            command=self.roll_initiative
         )
 
         # TODO: add advantage option here (use checkbox). this will update the class var above from None to whatever
 
         roll_button.grid(row=0, sticky="nsew", pady=10, padx=100)
 
-        self.window.grid_rowconfigure(0, weight=0)
-        self.window.grid_rowconfigure(1, weight=3)
-        self.window.grid_columnconfigure(0, weight=1)
+        # self.window.grid_rowconfigure(0, weight=0)
+        # self.window.grid_rowconfigure(1, weight=3)
+        # self.window.grid_columnconfigure(0, weight=1)
 
     def roll_initiative(self):
         num_rolls = 2 if self.advantage else 1

@@ -42,8 +42,6 @@ class Skill_Check_Menu:
             command=lambda: toggle_active_disabled(self.disadvantage_var, [advantage_checkbutton])
         )
 
-        output_box = tk.Text(self.window, width=40, height=15)
-
         guidance_checkbutton = tk.Checkbutton(self.window, text="Guidance", variable=self.guidance_var)
         roll_button = tk.Button(
             self.window,
@@ -57,7 +55,6 @@ class Skill_Check_Menu:
         disadvantage_checkbutton.grid(row=3, column=0, padx=15, pady=5, sticky="w")
         guidance_checkbutton.grid(row=4, column=0, padx=15, pady=5, sticky="w")
         roll_button.grid(row=5, column=0, padx=15, pady=20, sticky="w")
-        output_box.grid(row=0, rowspan=6, column=1, padx=50)
 
     def roll(self, main_menu_instance):
         roll_result = roll_skill(
