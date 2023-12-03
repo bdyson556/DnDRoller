@@ -5,7 +5,7 @@ import stats_and_mods
 from display_helpers import toggle_active_disabled, display_roll_result_generic
 
 
-class Roll_To_Hit_Menu:
+class RollToHitMenu:
 
     def __init__(self, main_menu):
         self.main_menu = main_menu

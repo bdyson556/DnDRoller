@@ -10,7 +10,6 @@ class Initiative_Menu:
 
     def __init__(self, main_menu):
         self.main_menu = main_menu
-        # self.window = main_menu.window
         self.window = tk.Toplevel(main_menu.window)
         self.advantage = None
 
