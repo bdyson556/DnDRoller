@@ -1,7 +1,6 @@
 import tkinter as tk
-from gui_helpers import toggle_active_disabled, autocheck_checkboxes, display_roll_result
+from gui_helpers import toggle_active_disabled, display_skill_roll_result
 from roll import roll_skill
-from misc_helpers import combined_functions
 
 class Skill_Check_Menu:
     
@@ -14,41 +13,40 @@ class Skill_Check_Menu:
         self.advantage_var = tk.BooleanVar()
         self.disadvantage_var = tk.BooleanVar()
         self.guidance_var = tk.BooleanVar()
-        self.menu = None
+        self.window = None
         # TODO add num select widget to add custom modifier
 
     def display(self, main_menu_instance):
-        print("clicked!")
-        self.menu = tk.Toplevel(main_menu_instance.window)
+        self.window = tk.Toplevel(main_menu_instance.window)
         main_menu_instance.window.title("Skill Check")
         main_menu_instance.window.title("Skill Check")
-        self.menu.geometry("550x300")
-        skill_box_label = tk.Label(self.menu, text="Enter skill to check:")
+        self.window.geometry("550x300")
+        skill_box_label = tk.Label(self.window, text="Enter skill to check:")
 
         skill_dropdown = tk.OptionMenu(
-            self.menu,
+            self.window,
             self.skill_var,
             *self.SKILLS,
             # command=lambda: toggle_active_disabled(self.dropdown_var, [roll_button]) # TODO seems to trigger Skill_Check_Menu.display...
         )
         advantage_checkbutton = tk.Checkbutton(
-            self.menu,
+            self.window,
             text="Advantage",
             variable=self.advantage_var,
             command=lambda: toggle_active_disabled(self.advantage_var, [disadvantage_checkbutton])
         )
         disadvantage_checkbutton = tk.Checkbutton(
-            self.menu,
+            self.window,
             text="Disadvantage",
             variable=self.disadvantage_var,
             command=lambda: toggle_active_disabled(self.disadvantage_var, [advantage_checkbutton])
         )
 
-        output_box = tk.Text(self.menu, width=40, height=15)
+        output_box = tk.Text(self.window, width=40, height=15)
 
-        guidance_checkbutton = tk.Checkbutton(self.menu, text="Guidance", variable=self.guidance_var)
+        guidance_checkbutton = tk.Checkbutton(self.window, text="Guidance", variable=self.guidance_var)
         roll_button = tk.Button(
-            self.menu,
+            self.window,
             text="Roll!",
             command=lambda: self.roll(main_menu_instance)
         )
@@ -71,11 +69,11 @@ class Skill_Check_Menu:
         )
         main_menu_instance.roller.roll_history.append(roll_result)
         #     roller_instance.roll_history.append(roll_result)
-        display_roll_result(
+        display_skill_roll_result(
             self.skill_var.get(),
             roll_result,
             main_menu_instance.output_box
         )
-        self.menu.destroy()
+        self.window.destroy()
 
 

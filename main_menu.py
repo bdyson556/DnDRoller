@@ -4,7 +4,7 @@ import roll
 import stats_and_mods
 from roll import Roller, roll_initiative, roll_damage, roll_to_hit
 from gui_helpers import toggle_active_disabled, autocheck_checkboxes, depress_button, \
-    release_button, display_roll_result
+    release_button, display_skill_roll_result
 import skill_check
 
 # TODO: main menu: display stats, check (leads to menu or dropdown menu to select skill)
@@ -22,8 +22,6 @@ class Menu:
         self.window.geometry("450x350")
 
         self.skill_check_menu = skill_check.Skill_Check_Menu()
-        # self.roll_menu = roll.Roll_Menu()
-        # etc...
 
         self.skill_check_button = tk.Button(
             self.window,
@@ -50,6 +48,18 @@ class Menu:
 
         self.output_box = tk.Text(self.window, width=40, height=15)
         self.output_box.pack()
+        # self.output_box.grid(row=1, sticky="e")
+
+    # EXAMPLES OF "GRID()"
+    # skill_box_label.grid(row=0, column=0, padx=10, pady=15, sticky="w")
+    # skill_dropdown.grid(row=1, column=0, padx=10)
+    # advantage_checkbutton.grid(row=2, column=0, padx=15, pady=10, sticky="w")
+    # disadvantage_checkbutton.grid(row=3, column=0, padx=15, pady=5, sticky="w")
+    # guidance_checkbutton.grid(row=4, column=0, padx=15, pady=5, sticky="w")
+    # roll_button.grid(row=5, column=0, padx=15, pady=20, sticky="w")
+    # output_box.grid(row=0, rowspan=6, column=1, padx=50)
+
+
 
     def main_menu(self):
         self.window.mainloop()
@@ -68,7 +78,7 @@ class Menu:
         roll_button = tk.Button(
             roll_initiative_menu,
             text="Roll!",
-            command=lambda: display_roll_result(output_box, lambda: roll_initiative(advantage=False), self.roller)
+            command=lambda: display_skill_roll_result(output_box, lambda: roll_initiative(advantage=False), self.roller)
         )
 
         roll_button.grid(row=0, sticky="nsew", pady=10, padx=100)
@@ -110,7 +120,7 @@ class Menu:
             roll_button = tk.Button(
                 roll_to_hit_menu,
                 text="Roll!",
-                command=lambda: display_roll_result(
+                command=lambda: display_skill_roll_result(
                     output_box,
                     lambda: roll_to_hit(
                         weapon.get(),
@@ -179,7 +189,7 @@ class Menu:
         output_box = tk.Text(roll_for_damage_menu, width=40, height=15)
         roll_button = tk.Button(roll_for_damage_menu,
                                 text="Roll!",
-                                command=lambda: self.combined_functions([lambda: display_roll_result(
+                                command=lambda: self.combined_functions([lambda: display_skill_roll_result(
                                     output_box,
                                     lambda: roll_damage(
                                         weapon.get(),

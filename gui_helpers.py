@@ -44,13 +44,17 @@ def release_button(self, button, other_buttons=None):
     #     for b in other_buttons:
     #         b.configure(bg="original_color")
 
-def display_roll_result(roll_type, roll_result, box):
+def display_skill_roll_result(roll_type, roll_result, box):
     print(roll_result)
     text_output = roll_type + "\n" \
                   + "\tRoll result: " + str(roll_result.get("result")) + "\t\t" + "rolls: " + str(roll_result.get("rolls")) + "\n" \
                   + "\tAbility modifier: " + "+" + str(roll_result.get("modifier")) + "\n" \
                   + "\tProficient: " + str(roll_result.get("proficiency")) + "\n" \
-                  + "\tGuidance: " + "+" + str(roll_result.get("guidance")) + "\n" \
-                  # + json.dumps(roll_result) + "\n\n"
+                  + "\tGuidance: " + "+" + str(roll_result.get("guidance")) + "\n\n"
+    box.insert(tk.END, text_output)
+
+def display_roll_result_generic(roll_type, roll_result, box):
+    print(roll_result)
+    text_output = json.dumps(roll_result) + "\n\n"
     box.insert(tk.END, text_output)
 
