@@ -55,6 +55,6 @@ def display_skill_roll_result(roll_type, roll_result, box):
 
 def display_roll_result_generic(roll_type, roll_result, box):
     print(roll_result)
-    text_output = json.dumps(roll_result) + "\n\n"
+    text_output = roll_type + "\n\t" + json.dumps(roll_result) + "\n\n"
     box.insert(tk.END, text_output)
 

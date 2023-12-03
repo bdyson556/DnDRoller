@@ -1,11 +1,13 @@
 from tkinter import messagebox
 
+import initiative_menu
 import roll
 import stats_and_mods
 from roll import Roller, roll_initiative, roll_damage, roll_to_hit
-from gui_helpers import toggle_active_disabled, autocheck_checkboxes, depress_button, \
-    release_button, display_skill_roll_result
-import skill_check
+from display_helpers import toggle_active_disabled, autocheck_checkboxes, depress_button, \
+    release_button, display_skill_roll_result, display_roll_result_generic
+from skill_check import Skill_Check_Menu
+from initiative_menu import Initiative_Menu
 
 # TODO: main menu: display stats, check (leads to menu or dropdown menu to select skill)
 # TODO: display stats
@@ -21,20 +23,18 @@ class Menu:
         self.window.title("Main Menu")
         self.window.geometry("450x350")
 
-        self.skill_check_menu = skill_check.Skill_Check_Menu()
-
         self.skill_check_button = tk.Button(
             self.window,
             text="Skill Check",
-            command=lambda: self.skill_check_menu.display(self)
+            command=self.run_skill_check
         )
 
         self.skill_check_button.pack()
 
-        self.roll_initiative_button = tk.Button(self.window, text="Roll Initiative", command=self.roll_initiative_menu)
+        self.roll_initiative_button = tk.Button(self.window, text="Roll Initiative", command=self.display_roll_initiative_menu)
         self.roll_initiative_button.pack()
 
-        self.roll_to_hit_button = tk.Button(self.window, text="Roll to Hit", command=self.roll_to_hit_menu)
+        self.roll_to_hit_button = tk.Button(self.window, text="Roll to Hit", command=self.display_roll_to_hit_menu)
         self.roll_to_hit_button.pack()
 
         self.roll_for_damage_button = tk.Button(self.window, text="Roll for Damage", command=self.roll_for_damage_menu)
@@ -59,8 +59,6 @@ class Menu:
     # roll_button.grid(row=5, column=0, padx=15, pady=20, sticky="w")
     # output_box.grid(row=0, rowspan=6, column=1, padx=50)
 
-
-
     def main_menu(self):
         self.window.mainloop()
 
@@ -68,17 +66,16 @@ class Menu:
         selected_skill = skill_var.get()
         print(selected_skill)
 
-    def roll_initiative_menu(self):
-        print("Roll Initiative button clicked")
+    def display_roll_initiative_menu(self):
         roll_initiative_menu = tk.Toplevel(self.window)
-        roll_initiative_menu.title("Skill Check")
+        roll_initiative_menu.title("Roll initiative...")
         roll_initiative_menu.geometry("300x200")
 
         output_box = tk.Text(roll_initiative_menu, width=15, height=4)
         roll_button = tk.Button(
             roll_initiative_menu,
             text="Roll!",
-            command=lambda: display_skill_roll_result(output_box, lambda: roll_initiative(advantage=False), self.roller)
+            command=lambda: self.roll_initiative(roll_initiative_menu)
         )
 
         roll_button.grid(row=0, sticky="nsew", pady=10, padx=100)
@@ -88,7 +85,17 @@ class Menu:
         roll_initiative_menu.grid_rowconfigure(1, weight=3)
         roll_initiative_menu.grid_columnconfigure(0, weight=1)
 
-    def roll_to_hit_menu(self):
+    def roll_initiative(self, roll_initiative_menu):
+
+        roll_result = roll.roll_initiative(advantage=False)  # TODO: add advantage option here (use checkbox)
+        self.roller.roll_history.append(roll_result)
+        display_roll_result_generic("Initiative", roll_result, self.output_box)
+        roll_initiative_menu.destroy()
+
+
+        # display
+
+    def display_roll_to_hit_menu(self):
         # TODO: implement with weapon field and advantage, disadvantage checkboxes
         roll_to_hit_menu = tk.Toplevel(self.window)
         roll_to_hit_menu.title("Roll to hit")
@@ -304,3 +311,13 @@ class Menu:
 
     def combined_functions(self, func_list):
         for f in func_list: f()
+
+    def run_skill_check(self):
+        scm = Skill_Check_Menu()
+        scm.display(self)
+
+    def run_initiative(self):
+        im = Initiative_Menu()
+        im.display(self)
+
+

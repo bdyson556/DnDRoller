@@ -1,5 +1,5 @@
 import tkinter as tk
-from gui_helpers import toggle_active_disabled, display_skill_roll_result
+from display_helpers import toggle_active_disabled, display_skill_roll_result
 from roll import roll_skill
 
 class Skill_Check_Menu:
