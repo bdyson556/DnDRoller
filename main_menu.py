@@ -2,10 +2,11 @@ from tkinter import messagebox
 
 import roll
 import stats_and_mods
-from roll import Roller, roll_damage, roll_to_hit
+from roll import Roller, roll_damage
 from display_helpers import toggle_active_disabled, autocheck_checkboxes, depress_button, \
     release_button, display_skill_roll_result, display_roll_result_generic
-from skill_check import Skill_Check_Menu
+from roll_to_hit_menu import Roll_To_Hit_Menu
+from skill_check_menu import Skill_Check_Menu
 from initiative_menu import Initiative_Menu
 
 # TODO: main menu: display stats, check (leads to menu or dropdown menu to select skill)
@@ -34,7 +35,7 @@ class Menu:
         self.roll_initiative_button = tk.Button(self.window, text="Roll Initiative", command=self.run_initiative)
         self.roll_initiative_button.pack()
 
-        self.roll_to_hit_button = tk.Button(self.window, text="Roll to Hit", command=self.display_roll_to_hit_menu)
+        self.roll_to_hit_button = tk.Button(self.window, text="Roll to Hit", command=self.run_roll_to_hit)
         self.roll_to_hit_button.pack()
 
         self.roll_for_damage_button = tk.Button(self.window, text="Roll for Damage", command=self.roll_for_damage_menu)
@@ -65,58 +66,6 @@ class Menu:
     def get_selected_skill(self, skill_var):
         selected_skill = skill_var.get()
         print(selected_skill)
-
-    def display_roll_to_hit_menu(self):
-        # TODO: implement with weapon field and advantage, disadvantage checkboxes
-        roll_to_hit_menu = tk.Toplevel(self.window)
-        roll_to_hit_menu.title("Roll to hit")
-        roll_to_hit_menu.geometry("550x300")
-
-        weapon_label = tk.Label(roll_to_hit_menu, text="Enter weapon used:")
-        weapon = tk.StringVar(value="None")
-        weapon.set("None")
-        weapon_dropdown = tk.OptionMenu(roll_to_hit_menu, weapon, *stats_and_mods.weapons_stats.keys())
-
-        advantage_var = tk.BooleanVar()
-        advantage_checkbutton = tk.Checkbutton(
-            roll_to_hit_menu,
-            text="Advantage",
-            variable=advantage_var,
-            command=lambda: toggle_active_disabled(advantage_var, [disadvantage_checkbutton])
-        )
-
-        disadvantage_var = tk.BooleanVar()
-        disadvantage_checkbutton = tk.Checkbutton(
-            roll_to_hit_menu,
-            text="Disadvantage",
-            variable=disadvantage_var,
-            command=lambda: toggle_active_disabled(disadvantage_var, [advantage_checkbutton])
-        )
-
-        output_box = tk.Text(roll_to_hit_menu, width=40, height=15)
-        try:
-            roll_button = tk.Button(
-                roll_to_hit_menu,
-                text="Roll!",
-                command=lambda: display_skill_roll_result(
-                    output_box,
-                    lambda: roll_to_hit(
-                        weapon.get(),
-                        advantage=advantage_var.get(),
-                        disadvantage=disadvantage_var.get()
-                    ),
-                    self.roller
-                )
-            )
-        except KeyError as e:  # TODO test this out
-            messagebox.showerror("Error", "Please enter a valid skill name.")
-
-        weapon_label.grid(row=0, pady=10)
-        weapon_dropdown.grid(row=1, column=0, padx=10, pady=15, sticky="w")
-        advantage_checkbutton.grid(row=2, column=0, pady=10, sticky="w")
-        disadvantage_checkbutton.grid(row=3, column=0, pady=10, sticky="w")
-        roll_button.grid(row=4, column=0, pady=20, sticky="w")
-        output_box.grid(row=0, rowspan=6, column=1)
 
     def roll_for_damage_menu(self):
         roll_for_damage_menu = tk.Toplevel(self.window)
@@ -291,4 +240,7 @@ class Menu:
         im = Initiative_Menu(self)
         im.display()
 
+    def run_roll_to_hit(self):
+        rthm = Roll_To_Hit_Menu(self)
+        rthm.display()
 

@@ -21,16 +21,6 @@ def roll_skill(die_size, skill, advantage=False, disadvantage=False, guidance=Fa
 
     # TODO test this function
 
-def roll_to_hit(weapon, advantage=False, disadvantage=False):
-    num_rolls = 2 if advantage else 1
-    rolls = []
-    weapon_type = stats_and_mods.weapons_stats[weapon]["ability"]
-    modifier = stats_and_mods.char_stats[weapon_type]
-    for i in range(0, num_rolls):
-        rolls.append(random.randint(1, 20))
-    result = max(rolls) + modifier
-    return {"result": result, "rolls": rolls, f"{weapon_type} modifier": modifier}
-
 
 def roll_damage(weapon, advantage=False, disadvantage=False, sneak=False, critical=False):    # TODO use adv/disadv
     die = stats_and_mods.weapons_stats[weapon]["die"]
