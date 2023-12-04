@@ -1,9 +1,6 @@
 import tkinter as tk
 import json
 
-from roll import roll_skill
-
-
 def autocheck_checkboxes(actor_checkbox_state, object_checkboxes):
     for obj in object_checkboxes:
         if actor_checkbox_state.get():
@@ -55,6 +52,9 @@ def display_skill_roll_result(roll_type, roll_result, box):
 
 def display_roll_result_generic(roll_type, roll_result, box):
     print(roll_result)
-    text_output = str(roll_type) + "\n\t" + json.dumps(roll_result) + "\n\n"
+    text_output = "\n" + str(roll_type)
+    # del roll_result["result"]
+    for key in roll_result:
+        text_output += "\n\t" + key + ": " + str(roll_result[key])
     box.insert(tk.END, text_output)
 

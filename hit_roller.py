@@ -5,7 +5,7 @@ import stats_and_mods
 from display_helpers import toggle_active_disabled, display_roll_result_generic
 
 
-class RollToHitMenu:
+class HitRoller:
 
     def __init__(self, main_menu):
         self.main_menu = main_menu
@@ -13,9 +13,8 @@ class RollToHitMenu:
         self.advantage = None
         self.disadvantage = None
         self.weapon = None
-        # self.random = random()
 
-    def display(self):
+    def display_menu(self):
         # TODO: implement with weapon field and advantage, disadvantage checkboxes
         self.window.title("Roll to hit")
         self.window.geometry("550x300")

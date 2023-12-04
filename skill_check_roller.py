@@ -1,10 +1,15 @@
 import tkinter as tk
-from display_helpers import toggle_active_disabled, display_skill_roll_result
-from roll import roll_skill
 
-class Skill_Check_Menu:
-    
-    SKILLS = ["Acrobatics (Dex)", "Animal Handling (Wis)", "Arcana (Int)", "Athletics (Str)", "Deception (Cha)", "History (Int)", "Insight (Wis)", "Intimidation (Cha)", "Investigation (Int)", "Medicine (Wis)", "Nature (Int)", "Perception (Wis)", "Performance (Cha)", "Persuasion (Cha)", "Religion (Int)", "Sleight of Hand (Dex)", "Stealth (Dex)", "Survival (Wis)", "Thieves' Tools (Dex)"]
+import stats_and_mods
+from display_helpers import toggle_active_disabled, display_skill_roll_result
+import random
+
+
+class SkillCheckRoller:
+    SKILLS = ["Acrobatics (Dex)", "Animal Handling (Wis)", "Arcana (Int)", "Athletics (Str)", "Deception (Cha)",
+              "History (Int)", "Insight (Wis)", "Intimidation (Cha)", "Investigation (Int)", "Medicine (Wis)",
+              "Nature (Int)", "Perception (Wis)", "Performance (Cha)", "Persuasion (Cha)", "Religion (Int)",
+              "Sleight of Hand (Dex)", "Stealth (Dex)", "Survival (Wis)", "Thieves' Tools (Dex)"]
 
     def __init__(self):
         self.skill_var = tk.StringVar()
@@ -16,7 +21,7 @@ class Skill_Check_Menu:
         self.window = None
         # TODO add num select widget to add custom modifier
 
-    def display(self, main_menu_instance):
+    def display_menu(self, main_menu_instance):
         self.window = tk.Toplevel(main_menu_instance.window)
         main_menu_instance.window.title("Skill Check")
         main_menu_instance.window.title("Skill Check")
@@ -57,14 +62,14 @@ class Skill_Check_Menu:
         roll_button.grid(row=5, column=0, padx=15, pady=20, sticky="w")
 
     def roll(self, main_menu_instance):
-        roll_result = roll_skill(
+        roll_result = self.roll_skill(
             20,
             self.skill_var.get().lower(),
             advantage=self.advantage_var.get(),
             disadvantage=self.disadvantage_var.get(),
             guidance=self.guidance_var.get()
         )
-        main_menu_instance.roller.roll_history.append(roll_result)
+        main_menu_instance.roll_history.append(roll_result)
         #     roller_instance.roll_history.append(roll_result)
         display_skill_roll_result(
             self.skill_var.get(),
@@ -73,4 +78,15 @@ class Skill_Check_Menu:
         )
         self.window.destroy()
 
-
+    def roll_skill(self, die_size, skill, advantage=False, disadvantage=False, guidance=False):
+        num_rolls = 2 if advantage else 1
+        rolls = []
+        roll_min = 0 if die_size == 100 else 1
+        for i in range(0, num_rolls):
+            rolls.append(random.randint(roll_min, die_size))
+        proficiency = stats_and_mods.char_stats[skill]["proficient"]
+        modifier = stats_and_mods.char_stats[skill]["modifier"]
+        guidance_roll = random.randint(1, 4) if guidance else 0
+        result = max(rolls) + modifier + guidance_roll
+        return {"skill": skill, "result": result, "rolls": rolls, "proficiency": proficiency, "modifier": modifier,
+                "guidance": guidance_roll}
