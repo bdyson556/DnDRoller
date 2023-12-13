@@ -107,5 +107,16 @@
     "ability": "dexterity",
     "modifier": 11,
     "proficient": true
+  },
+  "spells":{
+    "levitate": {
+      "description": ""
+    },
+    "inventory": {
+      "ball bearings": {
+        "unit": null,
+        "qty": 250
+      }
+    }
   }
 }
