@@ -5,7 +5,7 @@ import stats_and_mods
 from display_helpers import toggle_active_disabled, display_roll_result_generic
 
 
-class RollToHitMenu:
+class HitRoller:
 
     def __init__(self, main_menu):
         self.main_menu = main_menu
@@ -13,9 +13,8 @@ class RollToHitMenu:
         self.advantage = None
         self.disadvantage = None
         self.weapon = None
-        # self.random = random()
 
-    def display(self):
+    def display_menu(self):
         # TODO: implement with weapon field and advantage, disadvantage checkboxes
         self.window.title("Roll to hit")
         self.window.geometry("550x300")
@@ -24,6 +23,7 @@ class RollToHitMenu:
         self.weapon = tk.StringVar(value="None")
         self.weapon.set("None")
         weapon_dropdown = tk.OptionMenu(self.window, self.weapon, *stats_and_mods.weapons_stats.keys())
+        # TODO: Maybe when selecting weapon from dropdown, assign JSON contents of weapon to dictionary? Then they can be accessed in roll_to_hit() and elsewhere. You might need to somehow add a lambda to the dropdown for this and create a method to handle the assignment.
 
         advantage_var = tk.BooleanVar()
         advantage_checkbutton = tk.Checkbutton(
@@ -66,15 +66,17 @@ class RollToHitMenu:
 
     def roll_to_hit(self):
         num_rolls = 2 if self.advantage else 1
-        print("clicked")
+        weapon = self.weapon.get()
         # TODO: implement disadvantage logic
         rolls = []
-        weapon_type = stats_and_mods.weapons_stats[self.weapon.get()]["ability"]
+        weapon_type = stats_and_mods.weapons_stats[weapon]["ability"]
         modifier = stats_and_mods.char_stats[weapon_type]
+        proficiency_bonus = int(stats_and_mods.char_stats["proficiency bonus"]) if weapon["proficiency"] else 0
+        proficiency_bonus = 0
         for i in range(0, num_rolls):
             rolls.append(random.randint(1, 20))
-        roll_result = max(rolls) + modifier
-        full_result = {"result": roll_result, "rolls": rolls, f"{weapon_type} modifier": modifier}
+        roll_result = max(rolls) + modifier + proficiency_bonus
+        full_result = {"result": roll_result, "rolls": rolls, f"{weapon_type} modifier": modifier, "proficiency bonus": proficiency_bonus}
 
         display_roll_result_generic(
             "Roll to hit",

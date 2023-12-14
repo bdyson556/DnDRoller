@@ -1,5 +1,5 @@
 import tkinter as tk
-import skill_check_menu
+import skill_check_roller
 
 class Global_Objects:
     def __init__(self):

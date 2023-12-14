@@ -1,13 +1,14 @@
 import tkinter as tk
 import random
 
+import helper_functions
 import stats_and_mods
-from display_helpers import toggle_active_disabled, autocheck_checkboxes, display_skill_roll_result, depress_button, \
+from display_helpers import toggle_active_disabled, autocheck_checkboxes, depress_button, \
     release_button, display_roll_result_generic
 from helper_functions import combined_functions
 
 
-class RollForDamageMenu:
+class DamageRoller:
 
     def __init__(self, main_menu):
         self.main_menu = main_menu
@@ -20,7 +21,7 @@ class RollForDamageMenu:
         self.sneak = None
         self.critical = None
 
-    def display(self):
+    def display_menu(self):
         self.window.title("Roll for damage")
         self.window.geometry("300x300")
 
@@ -45,7 +46,7 @@ class RollForDamageMenu:
             self.window,
             text="Sneak",
             variable=self.sneak,
-            command=lambda: self.combined_functions([
+            command=lambda: helper_functions.combined_functions([
                 lambda: autocheck_checkboxes(
                     self.sneak,
                     [advantage_checkbutton]
