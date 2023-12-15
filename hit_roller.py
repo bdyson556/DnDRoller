@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+from tkinter import messagebox
 
 import stats_and_mods
 from display_helpers import toggle_active_disabled, display_roll_result_generic
@@ -42,8 +43,7 @@ class HitRoller:
         roll_button = tk.Button(
             self.window,
             text="Roll!",
-            command=self.roll_to_hit
-            # command=lambda:
+            command= self.finish
         )
 
         weapon_label.grid(row=0, pady=10)
@@ -51,6 +51,11 @@ class HitRoller:
         advantage_checkbutton.grid(row=2, column=0, pady=10, sticky="w")
         disadvantage_checkbutton.grid(row=3, column=0, pady=10, sticky="w")
         roll_button.grid(row=4, column=0, pady=20, sticky="w")
+
+    def finish(self):
+        if self.weapon.get() == "None":
+            messagebox.showinfo("", "Oops! Please select a weapon.", parent=self.window)
+        else: self.roll_to_hit()
 
     def roll_to_hit(self):
         num_rolls = 2 if self.advantage else 1

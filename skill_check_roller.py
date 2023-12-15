@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 import stats_and_mods
 from display_helpers import toggle_active_disabled, display_skill_roll_result
@@ -51,7 +52,7 @@ class SkillCheckRoller:
         roll_button = tk.Button(
             self.window,
             text="Roll!",
-            command=lambda: self.roll(main_menu_instance)
+            command=lambda: self.finish(main_menu_instance)
         )
 
         skill_box_label.grid(row=0, column=0, padx=10, pady=15, sticky="w")
@@ -90,3 +91,9 @@ class SkillCheckRoller:
         result = max(rolls) + modifier + guidance_roll
         return {"skill": skill, "result": result, "rolls": rolls, "proficiency": proficiency, "modifier": modifier,
                 "guidance": guidance_roll}
+
+    def finish(self, main_menu_instance):
+        if self.skill_var.get() == "None":
+            messagebox.showinfo("", "Oops! Please select a skill.", parent=self.window)
+        else: self.roll(main_menu_instance)
+

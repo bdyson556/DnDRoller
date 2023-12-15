@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+from tkinter import messagebox
 
 import helper_functions
 import stats_and_mods
@@ -66,18 +67,7 @@ class DamageRoller:
             command=lambda: toggle_active_disabled(self.disadvantage, [advantage_checkbutton, sneak_checkbutton])
         )
 
-        roll_button = tk.Button(
-                                    self.window,
-                                    text="Roll!",
-                                    command=lambda: combined_functions(
-                                        [
-                                            self.roll_damage,
-                                            lambda: print(
-                                                f"disadvantage_var: {self.disadvantage.get()}, advantage_var: {self.advantage.get()}, snear_var: {self.sneak.get()}"
-                                            )
-                                        ]
-                                    )
-                                )
+        roll_button = tk.Button(self.window, text="Roll!", command=lambda: self.finish())
 
         weapon_dropdown.grid()
         advantage_checkbutton.grid()
@@ -95,6 +85,12 @@ class DamageRoller:
         sneak_eligibility_label = tk.Label(self.window, text="Can I sneak attack?", cursor="hand2", fg="blue")
         sneak_eligibility_label.bind("<Button-1>", self.sneak_eligibility_menu)
         sneak_eligibility_label.place(relx=0.5, rely=0.9, anchor="e", bordermode="outside")
+
+    def finish(self):
+        if self.weapon.get() == "None":
+            messagebox.showinfo("", "Oops! Please select a weapon.", parent=self.window)
+        else: self.roll_damage()
+
 
     def roll_damage(self):  # TODO use adv/disadv
         die = stats_and_mods.weapons_stats[self.weapon.get()]["die"]

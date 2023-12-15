@@ -1,3 +1,5 @@
+from tkinter import messagebox
+
 from hit_roller import HitRoller
 from skill_check_roller import SkillCheckRoller
 from initiative_roller import InitiativeRoller
@@ -63,7 +65,7 @@ class Menu:
     # def sneak_eligibility_menu(self, weapon):
 
     def character_stats_menu(self):
-        print("Update Character Stats button clicked")
+        messagebox.showinfo("Update Character Stats button clicked!")
 
     def show_roll_history(self):
         print("Roll history button clicked")
