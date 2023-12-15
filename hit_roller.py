@@ -58,7 +58,14 @@ class HitRoller:
         else: self.roll_to_hit()
 
     def roll_to_hit(self):
-        num_rolls = 2 if self.advantage.get() else 1
+        is_adv = self.advantage.get()
+        is_disadv = self.disadvantage.get()
+        condition = {}
+        num_rolls = 1
+        if is_adv or is_disadv:
+            num_rolls = 2
+            if is_adv: condition["condition"] = "advantaged"
+            else: condition["condition"] = "disadvantaged"
         weapon = self.weapon.get()
         # TODO: implement disadvantage logic
         rolls = []
@@ -68,8 +75,11 @@ class HitRoller:
         # proficiency_bonus = 0
         for i in range(0, num_rolls):
             rolls.append(random.randint(1, 20))
-        roll_result = max(rolls) + modifier + proficiency_bonus
+        selected_roll = min(rolls) if self.disadvantage.get() else max(rolls)
+        roll_result = selected_roll + modifier + proficiency_bonus
+
         full_result = {"result": roll_result, "rolls": rolls, f"{weapon_type} modifier": modifier, "proficiency bonus": proficiency_bonus}
+        full_result.update(condition)
 
         display_roll_result_generic(
             "Roll to hit",
