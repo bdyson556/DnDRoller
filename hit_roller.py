@@ -72,7 +72,6 @@ class HitRoller:
         weapon_type = stats_and_mods.weapons_stats[weapon]["ability"]
         modifier = stats_and_mods.char_stats[weapon_type]
         proficiency_bonus = int(stats_and_mods.char_stats["proficiency bonus"]) if stats_and_mods.weapons_stats[weapon]["proficiency"] else 0
-        # proficiency_bonus = 0
         for i in range(0, num_rolls):
             rolls.append(random.randint(1, 20))
         selected_roll = min(rolls) if self.disadvantage.get() else max(rolls)

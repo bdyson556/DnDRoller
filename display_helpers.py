@@ -44,10 +44,15 @@ def release_button(self, button, other_buttons=None):
 def display_skill_roll_result(roll_type, roll_result, box):
     print(roll_result)
     text_output = roll_type + "\n" \
-                  + "\tRoll result: " + str(roll_result.get("result")) + "\t\t" + "rolls: " + str(roll_result.get("rolls")) + "\n" \
-                  + "\tAbility modifier: " + "+" + str(roll_result.get("modifier")) + "\n" \
-                  + "\tProficient: " + str(roll_result.get("proficiency")) + "\n" \
-                  + "\tGuidance: " + "+" + str(roll_result.get("guidance")) + "\n\n"
+                  + f"\tRoll result: {str(roll_result.get('result'))}\t\trolls: {str(roll_result.get('rolls'))}\n" \
+                  + f"\tAbility modifier: +{str(roll_result.get('modifier'))}\n" \
+                  + f"\tProficient: {str(roll_result.get('proficiency'))}\n" \
+                  + f"\tGuidance: +{str(roll_result.get('guidance'))}\n"
+    try:
+        text_output += f"\tCondition: {roll_result['condition']}"
+    except: pass
+    text_output += "\n\n"
+
     box.insert(tk.END, text_output)
 
 def display_roll_result_generic(roll_type, roll_result, box):
