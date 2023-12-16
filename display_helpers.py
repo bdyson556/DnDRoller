@@ -34,12 +34,9 @@ def depress_button(self, button):
     button.configure(bg="green")
     button.configure("relief")[-1] == "sunken"
 
-def release_button(self, button, other_buttons=None):
+def release_button(self, button):
     button.configure(bg="light gray")
     button.configure("relief")[-1] == "raised"
-    # if other_buttons:
-    #     for b in other_buttons:
-    #         b.configure(bg="original_color")
 
 def display_skill_roll_result(roll_type, roll_result, box):
     print(roll_result)
