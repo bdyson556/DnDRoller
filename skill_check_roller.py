@@ -13,12 +13,12 @@ class SkillCheckRoller:
               "Sleight of Hand (Dex)", "Stealth (Dex)", "Survival (Wis)", "Thieves' Tools (Dex)"]
 
     def __init__(self):
-        self.skill_var = tk.StringVar()
-        self.skill_var.set("None")
+        self.skill = tk.StringVar()
+        self.skill.set("None")
         self.dropdown_var = tk.StringVar(value='')
-        self.advantage_var = tk.BooleanVar()
-        self.disadvantage_var = tk.BooleanVar()
-        self.guidance_var = tk.BooleanVar()
+        self.advantage = tk.BooleanVar()
+        self.disadvantage = tk.BooleanVar()
+        self.guidance = tk.BooleanVar()
         self.window = None
         # TODO add num select widget to add custom modifier
 
@@ -31,24 +31,24 @@ class SkillCheckRoller:
 
         skill_dropdown = tk.OptionMenu(
             self.window,
-            self.skill_var,
+            self.skill,
             *self.SKILLS,
             # command=lambda: toggle_active_disabled(self.dropdown_var, [roll_button]) # TODO seems to trigger Skill_Check_Menu.display...
         )
         advantage_checkbutton = tk.Checkbutton(
             self.window,
             text="Advantage",
-            variable=self.advantage_var,
-            command=lambda: toggle_active_disabled(self.advantage_var, [disadvantage_checkbutton])
+            variable=self.advantage,
+            command=lambda: toggle_active_disabled(self.advantage, [disadvantage_checkbutton])
         )
         disadvantage_checkbutton = tk.Checkbutton(
             self.window,
             text="Disadvantage",
-            variable=self.disadvantage_var,
-            command=lambda: toggle_active_disabled(self.disadvantage_var, [advantage_checkbutton])
+            variable=self.disadvantage,
+            command=lambda: toggle_active_disabled(self.disadvantage, [advantage_checkbutton])
         )
 
-        guidance_checkbutton = tk.Checkbutton(self.window, text="Guidance", variable=self.guidance_var)
+        guidance_checkbutton = tk.Checkbutton(self.window, text="Guidance", variable=self.guidance)
         roll_button = tk.Button(
             self.window,
             text="Roll!",
@@ -65,35 +65,45 @@ class SkillCheckRoller:
     def roll(self, main_menu_instance):
         roll_result = self.roll_skill(
             20,
-            self.skill_var.get().lower(),
-            advantage=self.advantage_var.get(),
-            disadvantage=self.disadvantage_var.get(),
-            guidance=self.guidance_var.get()
+            self.skill.get().lower(),
+            advantage=self.advantage.get(),
+            disadvantage=self.disadvantage.get(),
+            guidance=self.guidance.get()
         )
         main_menu_instance.roll_history.append(roll_result)
         #     roller_instance.roll_history.append(roll_result)
         display_skill_roll_result(
-            self.skill_var.get(),
+            self.skill.get(),
             roll_result,
             main_menu_instance.output_box
         )
         self.window.destroy()
 
+    def finish(self, main_menu_instance):
+        if self.skill.get() == "None":
+            messagebox.showinfo("", "Oops! Please select a skill.", parent=self.window)
+        else: self.roll(main_menu_instance)
+
     def roll_skill(self, die_size, skill, advantage=False, disadvantage=False, guidance=False):
-        num_rolls = 2 if advantage else 1
+        # num_rolls = 2 if advantage else 1
+        num_rolls = 1
+        is_adv = self.advantage.get()
+        is_disadv = self.disadvantage.get()
+        condition = {}
+        if is_adv or is_disadv:
+            num_rolls = 2
+            if is_adv: condition["condition"] = "advantaged"
+            else: condition["condition"] = "disadvantaged"
         rolls = []
         roll_min = 0 if die_size == 100 else 1
         for i in range(0, num_rolls):
             rolls.append(random.randint(roll_min, die_size))
         proficiency = stats_and_mods.char_stats[skill]["proficient"]
         modifier = stats_and_mods.char_stats[skill]["modifier"]
-        guidance_roll = random.randint(1, 4) if guidance else 0
-        result = max(rolls) + modifier + guidance_roll
-        return {"skill": skill, "result": result, "rolls": rolls, "proficiency": proficiency, "modifier": modifier,
-                "guidance": guidance_roll}
-
-    def finish(self, main_menu_instance):
-        if self.skill_var.get() == "None":
-            messagebox.showinfo("", "Oops! Please select a skill.", parent=self.window)
-        else: self.roll(main_menu_instance)
+        guidance_roll = random.randint(1, 4) if self.guidance.get() else 0
+        selected_roll = min(rolls) if is_disadv else max(rolls)
+        result = selected_roll + modifier + guidance_roll
+        full_result = {"skill": skill, "result": result, "rolls": rolls, "proficiency": proficiency, "modifier": modifier, "guidance": guidance_roll}
+        full_result.update(condition)
+        return full_result
 
