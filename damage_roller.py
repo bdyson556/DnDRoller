@@ -31,54 +31,21 @@ class DamageRoller:
         self.weapon.set("None")
         weapon_dropdown = tk.OptionMenu(self.window, self.weapon, *stats_and_mods.weapons_stats.keys())
 
-        self.advantage = tk.BooleanVar()
-        advantage_checkbutton = tk.Checkbutton(
-            self.window,
-            text="Advantage",
-            variable=self.advantage,
-            command=lambda: toggle_active_disabled(
-                self.advantage,
-                [disadvantage_checkbutton]
-            )
-        )
-
         self.sneak = tk.BooleanVar()
         sneak_checkbutton = tk.Checkbutton(
             self.window,
             text="Sneak",
             variable=self.sneak,
-            command=lambda: helper_functions.combined_functions([
-                lambda: autocheck_checkboxes(
-                    self.sneak,
-                    [advantage_checkbutton]
-                ),
-                lambda: toggle_active_disabled(
-                    self.sneak,
-                    [disadvantage_checkbutton]
-                )
-            ])
-        )
-
-        self.disadvantage = tk.BooleanVar()
-        disadvantage_checkbutton = tk.Checkbutton(
-            self.window,
-            text="Disadvantage",
-            variable=self.disadvantage,
-            command=lambda: toggle_active_disabled(self.disadvantage, [advantage_checkbutton, sneak_checkbutton])
-        )
+            command=lambda: helper_functions.combined_functions([]))
 
         roll_button = tk.Button(self.window, text="Roll!", command=lambda: self.finish())
 
         weapon_dropdown.grid()
-        advantage_checkbutton.grid()
-        disadvantage_checkbutton.grid()
         roll_button.grid()
 
         weapon_label.grid(row=0, pady=10, padx=15)
         weapon_dropdown.grid(row=1, column=0, padx=30)
-        advantage_checkbutton.grid(row=2, column=0, padx=30, pady=10, sticky="w")
         sneak_checkbutton.grid(row=3, column=0, padx=30, pady=10, sticky="w")
-        disadvantage_checkbutton.grid(row=4, column=0, padx=30, pady=10, sticky="w")
         roll_button.grid(row=5, column=0)
 
         # Can I sneak attack? Opens new menu to check conditions.
@@ -92,14 +59,13 @@ class DamageRoller:
         else: self.roll_damage()
 
 
-    def roll_damage(self):  # TODO use adv/disadv
+    def roll_damage(self):
         die = stats_and_mods.weapons_stats[self.weapon.get()]["die"]
         attack_type = stats_and_mods.weapons_stats[self.weapon.get()]["type"]
         # ability_mod = stats_and_mods.weapons[weapon][""]
         damage_ability = stats_and_mods.char_stats["damage ability"]
         ability_mod = stats_and_mods.char_stats[damage_ability]
         print(ability_mod)
-        advantage = self.sneak.get()
         num_rolls = 1 + stats_and_mods.char_stats["num sneak dice"]
         critical_mod = die * num_rolls if self.critical else 0
         rolls = []
@@ -109,7 +75,6 @@ class DamageRoller:
         full_result = {
             "result": roll_result,
             "sneak": self.sneak.get(),
-            "advantage": advantage,
             "critical mod": f"{critical_mod} ({num_rolls} roll * d{die})",
             "rolls": f"{rolls} (= {sum(rolls)})",
             "attack type": attack_type,
