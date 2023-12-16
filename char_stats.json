@@ -3,7 +3,7 @@
   "armor class": 18,
   "dual-wield bonus": 1,
   "num damage dice": 1,
-  "num sneak dice": 3,
+  "num sneak dice": 4,
   "damage ability": "dexterity",
   "strength": 0,
   "initiative": 5,

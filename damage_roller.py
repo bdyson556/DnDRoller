@@ -60,27 +60,35 @@ class DamageRoller:
 
 
     def roll_damage(self):
-        die = stats_and_mods.weapons_stats[self.weapon.get()]["die"]
-        attack_type = stats_and_mods.weapons_stats[self.weapon.get()]["type"]
+        weapon = self.weapon.get()
+        die = stats_and_mods.weapons_stats[weapon]["die"]
+        num_base_rolls = stats_and_mods.weapons_stats[weapon]["num rolls"]
+        attack_type = stats_and_mods.weapons_stats[weapon]["type"]
         # ability_mod = stats_and_mods.weapons[weapon][""]
         damage_ability = stats_and_mods.char_stats["damage ability"]
         ability_mod = stats_and_mods.char_stats[damage_ability]
-        print(ability_mod)
-        num_rolls = 1 + stats_and_mods.char_stats["num sneak dice"]
-        critical_mod = die * num_rolls if self.critical else 0
-        rolls = []
-        for i in range(0, num_rolls):
-            rolls.append(random.randint(1, die))
+        critical_mod = 0
+
+        rolls = [random.randint(1, die) for i in range(0, num_base_rolls)]
+
+        if self.sneak.get():
+            num_sneak_rolls = stats_and_mods.char_stats["num sneak dice"]
+            for i in range(0, num_sneak_rolls):
+                rolls.append(random.randint(1, 6))
+            critical_mod = 6 * num_sneak_rolls if self.critical else 0
+        else:
+            if self.critical: critical_mod = die
+
         roll_result = sum(rolls) + ability_mod + critical_mod
         full_result = {
             "result": roll_result,
-            "sneak": self.sneak.get(),
-            "critical mod": f"{critical_mod} ({num_rolls} roll * d{die})",
             "rolls": f"{rolls} (= {sum(rolls)})",
-            "attack type": attack_type,
-            "ability modifier": f"{ability_mod} ({damage_ability})"
+            "sneak": self.sneak.get(),
+            "critical mod": f"{critical_mod}",
+            "ability modifier": f"{ability_mod} ({damage_ability})",
+            "attack type": attack_type
         }
-        
+
         display_roll_result_generic(
             # roll_type, roll_result, box
             "Damage roll",
