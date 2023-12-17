@@ -53,10 +53,15 @@ def display_skill_roll_result(roll_type, roll_result, box):
     box.insert(tk.END, text_output)
 
 def display_roll_result_generic(roll_type, roll_result, box):
-    print(roll_result)
     text_output = "\n" + str(roll_type)
     # del roll_result["result"]
     for key in roll_result:
         text_output += "\n\t" + key + ": " + str(roll_result[key])
     box.insert(tk.END, text_output)
 
+# def display_attack_rolls(roll_type, roll_result, box):
+#     print(roll_result)
+#     text_output = "\n" + str(roll_type)
+#     for key in roll_result:
+#         text_output += "\n\t" + key + ": " + str(roll_result[key])
+#     box.insert(tk.END, text_output)
