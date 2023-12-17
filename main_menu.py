@@ -16,7 +16,7 @@ class Menu:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("Main Menu")
-        self.window.geometry("450x350")
+        self.window.geometry("500x350")
         self.roll_history = []
 
         self.skill_check_button = tk.Button(
@@ -40,21 +40,11 @@ class Menu:
         self.output_box = tk.Text(self.window, width=40, height=15)
         # self.output_box.grid(row=1, sticky="e")
 
-        self.skill_check_button.pack()
-        self.roll_initiative_button.pack()
-        self.roll_attack_button.pack()
-        self.update_character_stats_button.pack()
-        self.output_box.pack()
-
-
-    # EXAMPLES OF "GRID()"
-    # skill_box_label.grid(row=0, column=0, padx=10, pady=15, sticky="w")
-    # skill_dropdown.grid(row=1, column=0, padx=10)
-    # advantage_checkbutton.grid(row=2, column=0, padx=15, pady=10, sticky="w")
-    # disadvantage_checkbutton.grid(row=3, column=0, padx=15, pady=5, sticky="w")
-    # guidance_checkbutton.grid(row=4, column=0, padx=15, pady=5, sticky="w")
-    # roll_button.grid(row=5, column=0, padx=15, pady=20, sticky="w")
-    # output_box.grid(row=0, rowspan=6, column=1, padx=50)
+        self.skill_check_button.grid(row=0, column=0, padx=15)
+        self.roll_initiative_button.grid(row=1, column=0, padx=15)
+        self.roll_attack_button.grid(row=2, column=0, padx=15)
+        self.update_character_stats_button.grid(row=3, column=0, padx=15)
+        self.output_box.grid(row=0, column=1, padx=25, rowspan=8)
 
     def main_menu(self):
         self.window.mainloop()
