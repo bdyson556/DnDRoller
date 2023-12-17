@@ -1,6 +1,6 @@
 from tkinter import messagebox
 
-from hit_roller import HitRoller
+from attack_roller import AttackRoller
 from skill_check_roller import SkillCheckRoller
 from initiative_roller import InitiativeRoller
 from damage_roller import DamageRoller
@@ -30,11 +30,11 @@ class Menu:
         self.roll_initiative_button = tk.Button(self.window, text="Roll Initiative", command=self.run_initiative)
         self.roll_initiative_button.pack()
 
-        self.roll_to_hit_button = tk.Button(self.window, text="Roll to Hit", command=self.run_roll_to_hit)
-        self.roll_to_hit_button.pack()
+        self.roll_attack_button = tk.Button(self.window, text="Attack", command=self.run_attack)
+        self.roll_attack_button.pack()
 
-        self.roll_for_damage_button = tk.Button(self.window, text="Roll for Damage", command=self.run_roll_for_damage)
-        self.roll_for_damage_button.pack()
+        # self.roll_for_damage_button = tk.Button(self.window, text="Roll for Damage", command=self.run_roll_for_damage)
+        # self.roll_for_damage_button.pack()
 
         self.update_character_stats_button = tk.Button(self.window, text="Character Stats...",
                                                        command=self.character_stats_menu)
@@ -92,8 +92,8 @@ class Menu:
         im = InitiativeRoller(self)
         im.display_menu()
 
-    def run_roll_to_hit(self):
-        rthm = HitRoller(self)
+    def run_attack(self):
+        rthm = AttackRoller(self)
         rthm.display_menu()
 
     def run_roll_for_damage(self):
