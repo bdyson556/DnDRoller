@@ -57,6 +57,7 @@ def display_roll_result_generic(roll_type, roll_result, box):
     # del roll_result["result"]
     for key in roll_result:
         text_output += "\n\t" + key + ": " + str(roll_result[key])
+    text_output += "\n"
     box.insert(tk.END, text_output)
 
 # def display_attack_rolls(roll_type, roll_result, box):

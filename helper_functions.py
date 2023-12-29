@@ -1,4 +1,5 @@
 import stats_and_mods
+import random
 
 
 def combined_functions(func_list):
@@ -12,3 +13,6 @@ def can_sneak(weapon, advantaged, disadvantaged, flanking):
             ("ranged" in weapon_properties or "finesse" in weapon_properties) and
             (advantaged or flanking)
     )
+
+def roll_dice(die, num_rolls):
+    return [random.randint(1, die) for _ in range(0, num_rolls)]

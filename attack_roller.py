@@ -1,8 +1,8 @@
 import tkinter as tk
-import random
 from tkinter import messagebox
 
 import helper_functions
+from helper_functions import *
 import stats_and_mods
 from display_helpers import toggle_active_disabled, display_roll_result_generic, depress_button, release_button
 
@@ -19,7 +19,7 @@ class AttackRoller:
         self.sneak = tk.BooleanVar()
         self.critical = False
 
-        self.output_box = tk.Text(self.window, width=40, height=15)
+        self.output_box = tk.Text(self.window, width=45, height=15)
         self.output_box.grid(row=0, column=1, pady=30, rowspan=5)
 
 
@@ -100,20 +100,19 @@ class AttackRoller:
             else: condition["condition"] = "disadvantaged"
         weapon = self.weapon.get()
         # TODO: implement disadvantage logic
-        rolls = []
         weapon_type = stats_and_mods.weapons_stats[weapon]["ability"]
         modifier = stats_and_mods.char_stats[weapon_type]
         proficiency_bonus = int(stats_and_mods.char_stats["proficiency bonus"]) if stats_and_mods.weapons_stats[weapon]["proficiency"] else 0
-        for i in range(0, num_rolls):
-            rolls.append(random.randint(1, 20))
-        selected_roll = min(rolls) if self.disadvantage.get() else max(rolls)
+        # rolls = [random.randint(1, 20) for _ in range(0, num_rolls)]
+        rolls = roll_dice(20, num_rolls)
+        selected_roll = max(rolls) if not self.disadvantage.get() else min(rolls)
         roll_result = selected_roll + modifier + proficiency_bonus
-        full_result = {"result": roll_result, "rolls": rolls, f"{weapon_type} modifier": modifier,
+        full_result = {"result": roll_result, "roll": str(selected_roll) + str(f"\t {rolls} "), f"{weapon_type} modifier": modifier,
                        "proficiency bonus": proficiency_bonus}
         full_result.update(condition)
         if selected_roll == 20:
             self.critical = True
-            full_result["Critical hit!"] = ""
+            full_result["Critical hit! "] = ""
 
         print(full_result)
         display_roll_result_generic(
@@ -122,7 +121,7 @@ class AttackRoller:
             self.output_box
         )
         display_roll_result_generic(
-            "Roll to hit",
+            f"Roll to hit: {self.weapon.get()}",
             full_result,
             self.main_menu.output_box
         )
@@ -130,36 +129,35 @@ class AttackRoller:
     def roll_damage(self):
         weapon = self.weapon.get()
         die = stats_and_mods.weapons_stats[weapon]["die"]
-        num_base_rolls = stats_and_mods.weapons_stats[weapon]["num rolls"]
         attack_type = stats_and_mods.weapons_stats[weapon]["type"]
-        # ability_mod = stats_and_mods.weapons[weapon][""]
         damage_ability = stats_and_mods.char_stats["damage ability"]
         ability_mod = stats_and_mods.char_stats[damage_ability]
-        critical_mod = 0
+        num_rolls = stats_and_mods.weapons_stats[weapon]["num rolls"]  # Number of base rolls.
 
-        rolls = [random.randint(1, die) for i in range(0, num_base_rolls)]
-
+        num_sneak_rolls = 0
         if self.sneak.get():
             num_sneak_rolls = stats_and_mods.char_stats["num sneak dice"]
-            for i in range(0, num_sneak_rolls):
-                rolls.append(random.randint(1, 6))
-            critical_mod = 6 * num_sneak_rolls if self.critical else 0
-        else:
-            if self.critical: critical_mod = die
+            num_rolls += num_sneak_rolls  # If sneak, add EXTRA rolls.
 
+        critical_mod = 0 if not self.critical else die * num_rolls  # If crit, crit mod = auto max out on all dice.
+        rolls = roll_dice(die, num_rolls)
         roll_result = sum(rolls) + ability_mod + critical_mod
+
+        sneak_info = "" if not self.sneak.get() else f"     ( +{num_sneak_rolls} D{die} )"
+        crit_info = "" if not self.critical else f"     ( +{num_rolls} D{die} )"
+
         full_result = {
             "result": roll_result,
-            "rolls": f"{rolls} (= {sum(rolls)})",
-            "sneak": self.sneak.get(),
-            "critical mod": f"{critical_mod}",
+            "rolls": f"{rolls} ( = {sum(rolls)} )",
+            "sneak": str(self.sneak.get()) + sneak_info,
+            "critical mod": f"{critical_mod}" + crit_info,
             "ability modifier": f"{ability_mod} ({damage_ability})",
             "attack type": attack_type
         }
 
         display_roll_result_generic(
             # roll_type, roll_result, box
-            "Damage roll",
+            f"Damage roll: {weapon}",
             full_result,
             self.main_menu.output_box
         )
@@ -182,7 +180,7 @@ class AttackRoller:
         disadvantage_var = tk.BooleanVar()
         disadvantage_label = tk.Label(sneak_menu, text="Are you disadvantaged?")
         disadvantage_label.pack(pady=10)
-        yes_disadvantaged_button = tk.Button(sneak_menu, text="Yes", command=lambda: helper_functions.combined_functions(
+        yes_disadvantaged_button = tk.Button(sneak_menu, text="Yes", command=lambda: combined_functions(
             # [lambda: depress_button(yes_disadvantaged_button[1], [no_disadvantaged_button]),
             [lambda: disadvantage_var.set(True),
              lambda: depress_button(empty, yes_disadvantaged_button),
@@ -190,7 +188,7 @@ class AttackRoller:
              lambda: toggle_active_disabled(disadvantage_var, [yes_advantaged_button, no_advantaged_button])]
         ))
 
-        no_disadvantaged_button = tk.Button(sneak_menu, text="No", command=lambda: helper_functions.combined_functions(
+        no_disadvantaged_button = tk.Button(sneak_menu, text="No", command=lambda: combined_functions(
             [lambda: disadvantage_var.set(False),
              lambda: depress_button(empty, no_disadvantaged_button),
              release_button(empty, yes_disadvantaged_button),
@@ -214,9 +212,9 @@ class AttackRoller:
         self.flanking = tk.BooleanVar()
         flanking_label = tk.Label(sneak_menu, text="Are you and another enemy of the target flanking the target?")
         flanking_label.pack(pady=10)
-        yes_flanking_button = tk.Button(sneak_menu, text="Yes", command=lambda: helper_functions.combined_functions(
+        yes_flanking_button = tk.Button(sneak_menu, text="Yes", command=lambda: combined_functions(
             [lambda: depress_button(yes_flanking_button, [no_flanking_button]), lambda: self.flanking.set(True)]))
-        no_flanking_button = tk.Button(sneak_menu, text="No", command=lambda: helper_functions.combined_functions(
+        no_flanking_button = tk.Button(sneak_menu, text="No", command=lambda: combined_functions(
             [lambda: depress_button(no_flanking_button, [yes_flanking_button]), lambda: self.flanking.set(False)]))
         yes_flanking_button.pack(side="left")
         no_flanking_button.pack(side="left")

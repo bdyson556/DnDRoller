@@ -16,7 +16,7 @@ class Menu:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("Main Menu")
-        self.window.geometry("500x350")
+        self.window.geometry("550x350")
         self.roll_history = []
 
         self.skill_check_button = tk.Button(
@@ -37,7 +37,7 @@ class Menu:
 
         self.current_roll_result = None
 
-        self.output_box = tk.Text(self.window, width=40, height=15)
+        self.output_box = tk.Text(self.window, width=45, height=15)
         # self.output_box.grid(row=1, sticky="e")
 
         self.skill_check_button.grid(row=0, column=0, padx=15)
@@ -59,24 +59,23 @@ class Menu:
     def show_roll_history(self):
         print("Roll history button clicked")
 
-    def combined_functions(self, func_list):
-        for f in func_list: f()
+    # def combined_functions(self, func_list)
+    #     for f in func_list: f()
 
     def run_skill_check(self):
-        scm = SkillCheckRoller()
-        scm.display_menu(self)
+        sc_menu = SkillCheckRoller()
+        sc_menu.display_menu(self)
 
     def run_initiative(self):
-
-        im = InitiativeRoller(self)
-        im.display_menu()
+        initiative_menu = InitiativeRoller(self)
+        initiative_menu.display_menu()
 
     def run_attack(self):
-        rthm = AttackRoller(self)
-        rthm.display_menu()
+        attack_menu = AttackRoller(self)
+        attack_menu.display_menu()
 
-    def run_roll_for_damage(self):
-        rfdm = DamageRoller(self)
-        rfdm.display_menu()
+    def run_roll_for_damage(self):      # TODO: remove?
+        rfd_menu = DamageRoller(self)
+        rfd_menu.display_menu()
 
 

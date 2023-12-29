@@ -31,6 +31,7 @@
     "properties": ["finesse", "light", "thrown", "ranged"],
     "range": "20/60",
     "damage type": "piercing",
+    "proficiency": true,
     "weight": 1
   }
 }
