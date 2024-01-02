@@ -22,14 +22,6 @@ def toggle_active_disabled(actor_button_state, object_buttons: list):
             if isinstance(obj, tk.Checkbutton):
                 obj.deselect()
 
-# def toggle_active_disabled(actor_button_state, object_button):
-#     if actor_button_state.get():
-#         object_button.configure(state="disabled", fg="gray")
-#     else:
-#         object_button.configure(state="normal", fg="black")
-#         if isinstance(object_button, tk.Checkbutton):
-#             object_button.deselect()
-
 def depress_button(self, button):
     button.configure(bg="green")
     button.configure("relief")[-1] == "sunken"
