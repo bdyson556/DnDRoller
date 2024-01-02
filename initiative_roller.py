@@ -1,8 +1,9 @@
+import json
 import tkinter as tk
 import random
 
 import stats_and_mods
-from display_helpers import display_roll_result_generic
+from display_helpers import display_roll_result_generic, toggle_active_disabled
 
 
 class InitiativeRoller:
@@ -10,12 +11,25 @@ class InitiativeRoller:
     def __init__(self, main_menu):
         self.main_menu = main_menu
         self.window = tk.Toplevel(main_menu.window)
-        self.advantage = None
+        self.advantage = tk.BooleanVar()
+        self.disadvantage = tk.BooleanVar()
 
     def display_menu(self):
         self.window.title("Roll initiative...")
         self.window.geometry("300x200")
 
+        advantage_checkbutton = tk.Checkbutton(
+            self.window,
+            text="Advantage",
+            variable=self.advantage,
+            command=lambda: toggle_active_disabled(self.advantage, [disadvantage_checkbutton])
+        )
+        disadvantage_checkbutton = tk.Checkbutton(
+            self.window,
+            text="Disadvantage",
+            variable=self.disadvantage,
+            command=lambda: toggle_active_disabled(self.disadvantage, [advantage_checkbutton])
+        )
         roll_button = tk.Button(
             self.window,
             text="Roll!",
@@ -24,7 +38,9 @@ class InitiativeRoller:
 
         # TODO: add advantage option here (use checkbox). this will update the class var above from None to whatever
 
-        roll_button.grid(row=0, sticky="nsew", pady=10, padx=100)
+        advantage_checkbutton.grid(row=0, column=0, padx=100, pady=10, sticky="w")
+        disadvantage_checkbutton.grid(row=1, column=0, padx=100, pady=10, sticky="w")
+        roll_button.grid(row=2, sticky="nsew", pady=10, padx=100)
 
     def roll_initiative(self):
         num_rolls = 2 if self.advantage else 1
@@ -37,8 +53,3 @@ class InitiativeRoller:
         self.main_menu.roll_history.append(full_result)
         display_roll_result_generic("Initiative", full_result, self.main_menu.output_box)
         self.window.destroy()
-
-    def display_roll_result(self, roll_result):
-        print(roll_result)
-        text_output = "\n\t" + json.dumps(roll_result) + "\n\n"
-        box.insert(tk.END, text_output)
