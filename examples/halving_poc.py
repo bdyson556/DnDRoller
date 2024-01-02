@@ -4,6 +4,7 @@ def show_output():
     output_text = "Hello, World!" # Replace with your desired output
     output_box.delete('1.0', tk.END) # Clear previous output
     output_box.insert(tk.END, output_text) # Insert new output
+    output_box.see("end")
 
 # Create the Tkinter window
 window = tk.Tk()
