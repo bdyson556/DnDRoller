@@ -33,7 +33,6 @@ class SkillCheckRoller:
             self.window,
             self.skill,
             *self.SKILLS,
-            # command=lambda: toggle_active_disabled(self.dropdown_var, [roll_button]) # TODO seems to trigger Skill_Check_Menu.display...
         )
         advantage_checkbutton = tk.Checkbutton(
             self.window,
@@ -65,13 +64,9 @@ class SkillCheckRoller:
     def roll(self, main_menu_instance):
         roll_result = self.roll_skill(
             20,
-            self.skill.get().lower(),
-            advantage=self.advantage.get(),
-            disadvantage=self.disadvantage.get(),
-            guidance=self.guidance.get()
+            self.skill.get().lower()
         )
         main_menu_instance.roll_history.append(roll_result)
-        #     roller_instance.roll_history.append(roll_result)
         display_skill_roll_result(
             self.skill.get(),
             roll_result,
@@ -84,8 +79,7 @@ class SkillCheckRoller:
             messagebox.showinfo("", "Oops! Please select a skill.", parent=self.window)
         else: self.roll(main_menu_instance)
 
-    def roll_skill(self, die_size, skill, advantage=False, disadvantage=False, guidance=False):
-        # num_rolls = 2 if advantage else 1
+    def roll_skill(self, die_size, skill):
         num_rolls = 1
         is_adv = self.advantage.get()
         is_disadv = self.disadvantage.get()

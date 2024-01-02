@@ -22,6 +22,8 @@ class AttackRoller:
         self.output_box = tk.Text(self.window, width=45, height=15)
         self.output_box.grid(row=0, column=1, pady=30, rowspan=5)
 
+        self.sneak_window = None
+
 
     def display_menu(self):
         # TODO: implement with weapon field and advantage, disadvantage checkboxes
@@ -165,66 +167,121 @@ class AttackRoller:
         self.window.destroy()
 
     def sneak_eligibility_menu(self, empty):
-        sneak_menu = tk.Toplevel(self.window)
-        sneak_menu.title("Can I sneak attack?")
-        sneak_menu.geometry("550x300")
+        # sneak_window = tk.Toplevel(self.window)
+        self.sneak_window = tk.Toplevel(self.window)
+        self.sneak_window.title("Can I sneak attack?")
+        self.sneak_window.geometry("550x350")
 
-        weapon_label = tk.Label(sneak_menu, text="Enter weapon used:")
-        weapon_label.pack(pady=10)
+        weapon_label = tk.Label(self.sneak_window, text="Enter weapon used:")
         weapon = tk.StringVar(value="None")
         weapon.set("None")
-        weapon_dropdown = tk.OptionMenu(sneak_menu, weapon, *stats_and_mods.weapons_stats.keys())
-        weapon_dropdown.pack()
+        weapon_dropdown = tk.OptionMenu(self.sneak_window, self.weapon, *stats_and_mods.weapons_stats.keys())
 
-        # Are you disadvantaged? Yes / No
-        disadvantage_var = tk.BooleanVar()
-        disadvantage_label = tk.Label(sneak_menu, text="Are you disadvantaged?")
-        disadvantage_label.pack(pady=10)
-        yes_disadvantaged_button = tk.Button(sneak_menu, text="Yes", command=lambda: combined_functions(
-            # [lambda: depress_button(yes_disadvantaged_button[1], [no_disadvantaged_button]),
-            [lambda: disadvantage_var.set(True),
-             lambda: depress_button(empty, yes_disadvantaged_button),
-             lambda: release_button(empty, no_disadvantaged_button),
-             lambda: toggle_active_disabled(disadvantage_var, [yes_advantaged_button, no_advantaged_button])]
+        # ADVANTAGE BUTTONS
+        advantage_label = tk.Label(self.sneak_window, text="Do you have advantage?")
+        yes_advantaged_button = tk.Button(
+            self.sneak_window,
+            text="Yes",
+            command=lambda: helper_functions.combined_functions(
+                [
+                    lambda: self.advantage.set(True),
+                    lambda: self.disadvantage.set(False),
+                    lambda: depress_button(empty, yes_advantaged_button),
+                    lambda: depress_button(empty, no_disadvantaged_button),
+                    lambda: release_button(empty, no_advantaged_button),
+                    lambda: release_button(empty, yes_disadvantaged_button),
+                ]
+            )
+        )
+        no_advantaged_button = tk.Button(
+            self.sneak_window,
+            text="No",
+            command=lambda: helper_functions.combined_functions(
+                [
+                    lambda: depress_button(empty, no_advantaged_button),
+                    lambda: release_button(empty, yes_advantaged_button),
+                    lambda: self.advantage.set(False)
+                ]
+            )
+        )
+
+        # DISADVANTAGE BUTTONS
+        disadvantage_label = tk.Label(self.sneak_window, text="Are you disadvantaged?")
+        yes_disadvantaged_button = tk.Button(
+            self.sneak_window,
+            text="Yes",
+            command=lambda: combined_functions(
+                [
+                    lambda: self.disadvantage.set(True),
+                    lambda: self.advantage.set(False),
+                    lambda: depress_button(empty, yes_disadvantaged_button),
+                    lambda: depress_button(empty, no_advantaged_button),
+                    lambda: release_button(empty, no_disadvantaged_button),
+                    lambda: release_button(empty, yes_advantaged_button)
+                ]
+            )
+        )
+        no_disadvantaged_button = tk.Button(self.sneak_window, text="No", command=lambda: combined_functions(
+            [
+                lambda: self.disadvantage.set(False),
+                lambda: depress_button(empty, no_disadvantaged_button),
+                lambda: release_button(empty, yes_disadvantaged_button),
+            ]
         ))
-
-        no_disadvantaged_button = tk.Button(sneak_menu, text="No", command=lambda: combined_functions(
-            [lambda: disadvantage_var.set(False),
-             lambda: depress_button(empty, no_disadvantaged_button),
-             release_button(empty, yes_disadvantaged_button),
-             lambda: toggle_active_disabled(disadvantage_var, [yes_advantaged_button, no_advantaged_button])]
-        ))
-        yes_disadvantaged_button.pack(side="left")
-        no_disadvantaged_button.pack(side="left")
-
-        # Do you have advantage? Yes / No
-        advantage_var = tk.BooleanVar()
-        advantage_label = tk.Label(sneak_menu, text="Do you have advantage?")
-        advantage_label.pack(pady=10)
-        yes_advantaged_button = tk.Button(sneak_menu, text="Yes", command=lambda: helper_functions.combined_functions(
-            [lambda: depress_button(yes_advantaged_button, [no_advantaged_button]), lambda: advantage_var.set(True)]))
-        no_advantaged_button = tk.Button(sneak_menu, text="No", command=lambda: helper_functions.combined_functions(
-            [lambda: depress_button(no_advantaged_button, [yes_advantaged_button]), lambda: advantage_var.set(False)]))
-        yes_advantaged_button.pack(side="left")
-        no_advantaged_button.pack(side="left")
 
         # Are you and another enemy of the target flanking the target? Yes / No
         self.flanking = tk.BooleanVar()
-        flanking_label = tk.Label(sneak_menu, text="Are you and another enemy of the target flanking the target?")
-        flanking_label.pack(pady=10)
-        yes_flanking_button = tk.Button(sneak_menu, text="Yes", command=lambda: combined_functions(
-            [lambda: depress_button(yes_flanking_button, [no_flanking_button]), lambda: self.flanking.set(True)]))
-        no_flanking_button = tk.Button(sneak_menu, text="No", command=lambda: combined_functions(
-            [lambda: depress_button(no_flanking_button, [yes_flanking_button]), lambda: self.flanking.set(False)]))
-        yes_flanking_button.pack(side="left")
-        no_flanking_button.pack(side="left")
+        flanking_label = tk.Label(self.sneak_window, text="Are you and another enemy of the target flanking the target?")
+        yes_flanking_button = tk.Button(
+            self.sneak_window, text="Yes", command=lambda: combined_functions(
+                [
+                    lambda: self.flanking.set(True),
+                    lambda: depress_button(empty, yes_flanking_button),
+                    lambda: release_button(empty, no_flanking_button)
+                ]
+            )
+        )
+        no_flanking_button = tk.Button(
+            self.sneak_window, text="No", command=lambda: combined_functions(
+                [
+                    lambda: self.flanking.set(False),
+                    lambda: depress_button(empty, no_flanking_button),
+                    lambda: release_button(empty, yes_flanking_button)
+                ]
+            )
+        )
 
-        def display_sneak_result():
-            print(self.get_sneak_eligibility())
+        evaluate_button = tk.Button(self.sneak_window, text="Evaluate", command=self.evaluate)
 
-        evaluate_button = tk.Button(sneak_menu, text="Evaluate", command=display_sneak_result)
-        evaluate_button.pack()
+        # PLACEMENT OF BUTTONS
+
+        weapon_label.grid(row=0, column=0, padx=10, pady=15, sticky="w")
+        weapon_dropdown.grid(row=1, column=0, padx=10, pady=15, sticky="w")
+
+        advantage_label.grid(row=2, column=0, padx=10, pady=15, sticky="w")
+        yes_advantaged_button.grid(row=2, column=1, padx=10, pady=15, sticky="w")
+        no_advantaged_button.grid(row=2, column=2, padx=10, pady=15, sticky="w")
+
+        disadvantage_label.grid(row=4, column=0, padx=10, pady=15, sticky="w")
+        yes_disadvantaged_button.grid(row=4, column=1, padx=10, pady=15, sticky="w")
+        no_disadvantaged_button.grid(row=4, column=2, padx=10, pady=15, sticky="w")
+
+        flanking_label.grid(row=6, column=0, padx=10, pady=15, sticky="w")
+        yes_flanking_button.grid(row=6, column=1, padx=10, pady=15, sticky="w")
+        no_flanking_button.grid(row=6, column=2, padx=10, pady=15, sticky="w")
+
+        evaluate_button.grid(row=7, padx=10, pady=15, sticky="nesw")
+
 
     def get_sneak_eligibility(self):
-        finesse_or_ranged = stats_and_mods.weapons_stats[self.weapon]["type"] in ["finesse", "ranged"]
-        return (not self.disadvantage.get()) and finesse_or_ranged and (self.advantage.get() or self.flanking.get())
+        types = stats_and_mods.weapons_stats[self.weapon.get()]["properties"]
+        finesse_or_ranged = ("finesse" in types) or ("ranged" in types)
+        can_sneak = (not self.disadvantage.get()) and finesse_or_ranged and (self.advantage.get() or self.flanking.get())
+        # result = "Able to sneak!" if can_sneak else "NOT able to sneak."
+        return "Able to sneak!\n" if can_sneak else "NOT able to sneak.\n"
+
+    def evaluate(self):
+        can_sneak = self.get_sneak_eligibility()
+        self.output_box.insert(tk.END, str(can_sneak))
+        self.sneak_window.destroy()
+
