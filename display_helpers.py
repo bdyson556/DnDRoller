@@ -49,8 +49,9 @@ def display_skill_roll_result(roll_type, roll_result, box):
         text_output += f"\tCondition: {roll_result['condition']}"
     except: pass
     text_output += "\n\n"
-
     box.insert(tk.END, text_output)
+    box.see("end")
+
 
 def display_roll_result_generic(roll_type, roll_result, box):
     text_output = "\n" + str(roll_type)
@@ -59,10 +60,4 @@ def display_roll_result_generic(roll_type, roll_result, box):
         text_output += "\n\t" + key + ": " + str(roll_result[key])
     text_output += "\n"
     box.insert(tk.END, text_output)
-
-# def display_attack_rolls(roll_type, roll_result, box):
-#     print(roll_result)
-#     text_output = "\n" + str(roll_type)
-#     for key in roll_result:
-#         text_output += "\n\t" + key + ": " + str(roll_result[key])
-#     box.insert(tk.END, text_output)
+    box.see("end")
