@@ -78,4 +78,7 @@ class Menu:
         rfd_menu = DamageRoller(self)
         rfd_menu.display_menu()
 
+if __name__ == "__main__":
+    menu = Menu()
+    menu.main_menu()
 

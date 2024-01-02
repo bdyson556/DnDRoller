@@ -1,7 +1,7 @@
 import json
 
-char_file = "char_stats.json"
-weapons_file = "weapons.json"
+char_file = "data/char_stats.json"
+weapons_file = "data/weapons.json"
 
 char_stats = None
 with open(char_file, "r") as f:
